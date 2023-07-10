@@ -1,0 +1,354 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.com.hfs</groupId>
+	<artifactId>hfsframework-base</artifactId>
+	<version>2.0</version>
+	<name>hfsframework-base</name>
+	<description>HFS Framework Base</description>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
+		
+		<maven.compiler.release>20</maven.compiler.release>
+		
+		<jakartaee-api.version>10.0.0</jakartaee-api.version>
+		<wildfly.version>28.0.1.Final</wildfly.version>
+		
+		<compiler-plugin.version>3.10.1</compiler-plugin.version>
+
+		<version.jar.plugin>3.3.0</version.jar.plugin>
+		<version.javadoc.plugin>3.5.0</version.javadoc.plugin>
+		
+		<primefaces.version>12.0.0</primefaces.version>
+		<primefaces-extensions.version>12.0.7</primefaces-extensions.version>
+		
+		<hibernate.version>6.2.1.Final</hibernate.version>
+        <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
+
+		<jasperreports.version>6.20.5</jasperreports.version>
+		
+		<log4j-core.version>2.20.0</log4j-core.version>
+		
+		<junit-jupiter.version>5.10.0-M1</junit-jupiter.version>
+		<junit.platform.version>1.10.0-M1</junit.platform.version>
+		<mockito-core.version>5.4.0</mockito-core.version>
+	</properties>
+	
+	<repositories>
+		<repository>
+			<id>prime-repo</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
+		
+	<dependencies>
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<version>${jakartaee-api.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.mindrot</groupId>
+		    <artifactId>jbcrypt</artifactId>
+		    <version>0.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.modelmapper</groupId>
+		    <artifactId>modelmapper</artifactId>
+		    <version>3.1.1</version>
+		</dependency>
+
+		<!-- #################### DRIVERS #################### 
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.5.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.oracle.database.jdbc</groupId>
+		    <artifactId>ojdbc11</artifactId>
+		    <version>23.2.0.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.oracle.database.security</groupId>
+		    <artifactId>oraclepki</artifactId>
+		    <version>23.2.0.0</version>
+		</dependency>
+-->
+		<!-- #################### PRIMEFACES #################### -->
+		
+		<dependency>
+		    <groupId>org.omnifaces</groupId>
+		    <artifactId>omnifaces</artifactId>
+		    <version>4.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>${primefaces.version}</version>
+			<classifier>jakarta</classifier>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.primefaces.extensions</groupId>
+		    <artifactId>primefaces-extensions</artifactId>
+		    <version>${primefaces-extensions.version}</version>
+		    <classifier>jakarta</classifier>
+		</dependency>
+			
+		<dependency>
+		    <groupId>org.primefaces.extensions</groupId>
+		    <artifactId>resources-ckeditor</artifactId>
+		    <version>12.0.4</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.github.librepdf</groupId>
+		    <artifactId>openpdf</artifactId>
+		    <version>1.3.30</version>
+		</dependency>
+		
+        <!-- GChart and Layout needs GSON-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+        <!-- InputPhone -->
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>libphonenumber</artifactId>
+            <version>8.13.14</version>
+        </dependency>		
+
+		<dependency>
+		    <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+		    <artifactId>owasp-java-html-sanitizer</artifactId>
+		    <version>20220608.1</version>
+		</dependency>
+		
+		<!-- #################### HIBERNATE #################### -->
+
+		<dependency>
+		    <groupId>org.hibernate.orm</groupId>
+		    <artifactId>hibernate-core</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>		
+		<dependency>
+		    <groupId>org.hibernate.orm</groupId>
+		    <artifactId>hibernate-ehcache</artifactId>
+		    <version>6.0.0.Alpha7</version>
+		</dependency>				
+		<dependency>
+		    <groupId>org.hibernate.orm</groupId>
+		    <artifactId>hibernate-hikaricp</artifactId>
+		    <version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.zaxxer</groupId>
+		    <artifactId>HikariCP</artifactId>
+		    <version>5.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+		</dependency>		
+		<dependency>
+		    <groupId>org.hibernate.validator</groupId>
+		    <artifactId>hibernate-validator-annotation-processor</artifactId>
+		    <version>${hibernate-validator.version}</version>
+		</dependency>
+
+		<!-- #################### FASTERXML #################### -->
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-core</artifactId>
+		    <version>2.15.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.15.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		    <version>2.15.2</version>
+		</dependency>
+
+		<!-- #################### APACHE #################### -->
+
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>5.2.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.28</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox-tools</artifactId>
+		    <version>2.0.28</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>xmpbox</artifactId>
+		    <version>2.0.28</version>
+		</dependency>
+		<dependency>
+		    <groupId>commons-fileupload</groupId>
+		    <artifactId>commons-fileupload</artifactId>
+		    <version>1.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.12.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.directory.api</groupId>
+		    <artifactId>api-all</artifactId>
+		    <version>2.1.3</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.servicemix.bundles</groupId>
+					<artifactId>
+						org.apache.servicemix.bundles.dom4j
+					</artifactId>
+				</exclusion>
+			</exclusions>		    
+		</dependency>
+
+		<!-- #################### JASPER #################### -->
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>${jasperreports.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>${jasperreports.version}</version>
+		</dependency>
+						
+		<!-- #################### LOG #################### -->
+		
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+	    </dependency>
+
+		<!-- #################### TEST #################### -->
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-engine</artifactId>
+		    <version>${junit-jupiter.version}</version>
+		    <scope>test</scope>
+		</dependency>
+	    <dependency>
+	        <groupId>org.junit.platform</groupId>
+	        <artifactId>junit-platform-runner</artifactId>
+	        <version>${junit.platform.version}</version>
+	        <scope>test</scope>
+	    </dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+					    		
+	</dependencies>
+	
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${compiler-plugin.version}</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+<!-- 
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-dependency-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>copy-dependencies</id>
+			            <phase>prepare-package</phase>
+			            <goals>
+			                <goal>copy-dependencies</goal>
+			            </goals>
+			            <configuration>
+			                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+			                <overWriteReleases>false</overWriteReleases>
+			                <overWriteSnapshots>false</overWriteSnapshots>
+			                <overWriteIfNewer>true</overWriteIfNewer>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+ -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${version.jar.plugin}</version>
+		        <configuration>
+		        	<!-- <outputDirectory>../orcamento/src/main/webapp/WEB-INF/lib</outputDirectory>  -->
+					<archive>
+						<manifestFile>${project.build.sourceDirectory}/META-INF/MANIFEST.MF</manifestFile>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<!-- <classpathPrefix>lib</classpathPrefix> -->
+							<!-- <mainClass>br.jus.trt1.hfsframework.util.ldap.LdapExemplo</mainClass> -->
+						</manifest>
+					</archive>
+		        </configuration>
+			</plugin>
+<!-- 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${version.javadoc.plugin}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+-->
+		</plugins>
+	</build>
+		
+</project>

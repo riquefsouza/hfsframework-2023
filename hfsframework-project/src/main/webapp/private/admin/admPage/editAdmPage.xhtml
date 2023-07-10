@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui" template="/layout/layout.xhtml">
+
+	<ui:define name="tituloPagina"> - Manage Page</ui:define>
+
+	<ui:define name="conteudo-maior">
+		<h:form id="editAdmPage">
+	
+			<p:panel id="panelBasic" header="Manage Page"
+				style="margin-bottom:5px">
+	
+				<div class="ui-g">
+				    <div class="ui-g-12 ui-md-12 ui-lg-12" style="text-align: right;">	
+						<p:commandButton id="btnSave" value="Save" ajax="false"
+							icon="pi pi-check" styleClass="ui-button-success p-mr-2 p-mb-2"
+							action="#{admPageMB.save}"
+							title="Save a page" />
+						
+						<p:commandButton value="Clean" id="btnClean"
+							icon="pi pi-star-o" styleClass="ui-button-primary p-mr-2"
+							type="reset" title="Clean Fields" />							
+					
+						<p:commandButton value="Cancel" immediate="true" ajax="false" 
+							icon="pi pi-times" styleClass="ui-button-secondary" 						 
+							action="#{admPageMB.cancelEdition}" 
+							id="btnCancel" title="Cancel" />    
+					</div>
+				</div>
+			
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-8 ui-lg-6">
+						<p:outputLabel for="page" value="Page" />
+						<br></br>
+						<p:inputText id="page" label="Page" required="true"
+							style="width: 100%"
+							value="#{admPageMB.bean.url}" maxlength="255">
+						</p:inputText>
+					</div>
+				</div>
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-8 ui-lg-6">
+						<p:outputLabel for="description" value="Description:" />
+						<p:inputText id="description" label="Description" required="true"
+							style="width: 100%"
+							value="#{admPageMB.bean.description}" maxlength="255">
+						</p:inputText>
+					</div>
+				</div>						
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-8 ui-lg-7">
+						<p:outputLabel for="pickListProfile" value="Page Profile(s):" />
+						<p:pickList id="pickListProfile" responsive="true"
+							value="#{admPageMB.dualListAdmProfile}"
+							converter="admProfileConverter" var="item"
+							itemLabel="#{item.description}" itemValue="#{item}"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains" styleClass="picklistMaior">
+							<f:facet name="sourceCaption">Available</f:facet>
+							<f:facet name="targetCaption">Authorized</f:facet>
+						</p:pickList>
+					</div>
+				</div>
+
+			</p:panel>
+				
+		</h:form>
+	</ui:define>
+</ui:composition>

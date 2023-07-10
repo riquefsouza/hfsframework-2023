@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+        https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+	version="4.0">
+	
+	<navigation-rule>
+		<from-view-id>/login.xhtml</from-view-id>
+		<navigation-case>			
+			<from-outcome>LOGIN_HOME_PAGE</from-outcome>
+			<to-view-id>/private/desktop.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>			
+			<from-outcome>LOGIN_PAGE</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{identity.login()}</from-action>
+			<from-outcome>success</from-outcome>
+			<to-view-id>/private/desktop.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{identity.login()}</from-action>
+			<from-outcome>failure</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-action>#{hfsAuthenticator.logOut()}</from-action>
+			<from-outcome>SUCESSO</from-outcome>
+			<to-view-id>/login.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+	</navigation-rule>
+	
+	<application>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>pt_BR</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>messages</var>
+		</resource-bundle>
+	</application>
+		
+</faces-config>
