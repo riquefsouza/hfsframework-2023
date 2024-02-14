@@ -18,11 +18,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
 
-		<maven.compiler.release>20</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 
 		<jakartaee-api.version>10.0.0</jakartaee-api.version>
 
-		<wildfly.version>28.0.1.Final</wildfly.version>
+		<wildfly.version>30.0.1.Final</wildfly.version>
 		<compiler-plugin.version>3.10.1</compiler-plugin.version>
 		<war-plugin.version>3.3.2</war-plugin.version>
 		<wildfly-plugin.version>4.1.0.Final</wildfly-plugin.version>

@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets" xmlns:p="http://primefaces.org/ui">
+
+    <div class="layout-topbar">
+        <a class="menu-button" tabindex="0">
+            <i class="pi pi-bars"></i>
+        </a>
+        
+        <h:link styleClass="layout-topbar-logo" outcome="/private/desktop.xhtml">
+        	<strong>HFS</strong>
+        <!-- 
+			<p:graphicImage style="margin-bottom: -10px;"
+				name="logo.png" library="images" width="40px" height="60px" />
+ 		-->					
+        </h:link>
+
+        <h:form styleClass="topbar-form mr-4">
+        
+            <ul class="topbar-menu">
+                <li class="topbar-submenu">
+                    <a tabindex="0">Temas</a>
+                    <ul class="connected-overlay-in">
+    
+                        <li class="topbar-submenu-header">PRIMEONE</li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('saga', false)}" oncomplete="window.location.reload();">
+                        	<h:graphicImage name="themes/saga.png" library="images" alt="Saga"/><span>Saga</span></p:commandLink>
+                        </li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('vela', true)}" oncomplete="window.location.reload();">
+                        	<h:graphicImage name="themes/vela.png" library="images" alt="Vela"/><span>Vela</span></p:commandLink>
+                        </li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('arya', true)}" oncomplete="window.location.reload();">
+                        	<h:graphicImage name="themes/arya.png" library="images" alt="Arya"/><span>Arya</span></p:commandLink>
+                        </li>
+                        <li class="topbar-submenu-header">LEGACY</li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('nova-light', false)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/nova.png" library="images" alt="Nova"/><span>Nova</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('nova-dark', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/nova-alt.png" library="images" alt="Nova Alt"/><span>Nova Alt</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('nova-colored', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/nova-accent.png" library="images" alt="Nova Accent"/><span>Nova Accent</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('luna-amber', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/luna-amber.png" library="images" alt="Luna Amber"/><span>Luna Amber</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('luna-blue', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/luna-blue.png" library="images" alt="Luna Blue"/><span>Luna Blue</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('luna-green', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/luna-green.png" library="images" alt="Luna Green"/><span>Luna Green</span></p:commandLink></li>
+                        <li><p:commandLink actionListener="#{app.changeTheme('luna-pink', true)}" oncomplete="window.location.reload();">
+                        <h:graphicImage name="themes/luna-pink.png" library="images" alt="Luna Pink"/><span>Luna Pink</span></p:commandLink></li>
+                    </ul>
+                </li>
+            </ul>                        
+        </h:form>
+
+		<div class="layout-topbar-menu">
+			<h:form>
+	             <h:outputLink value="#{request.contextPath}/private/desktop.xhtml" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-user"></i>                 
+	             </h:outputLink>
+	             <h:outputLink value="#{request.contextPath}/private/desktop.xhtml" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-cog"></i>
+	             </h:outputLink>
+	            <p:commandLink action="#{hfsAuthenticator.logOut}" immediate="true" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-sign-out"></i>
+	            </p:commandLink>            
+			</h:form>
+		</div>
+		
+    </div>
+</ui:composition>

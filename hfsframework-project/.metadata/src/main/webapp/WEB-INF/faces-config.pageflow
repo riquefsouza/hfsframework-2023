@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf16874496906760" configfile="/predial/src/main/webapp/WEB-INF/faces-config.xml">
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf16874496906760" configfile="/hfsframework-project/src/main/webapp/WEB-INF/faces-config.xml">
   <nodes xsi:type="pageflow:PFPage" name="login.xhtml" id="pf16874497443251" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" outlinks="pf16874497443252 pf16874497443253 pf16874497443254 pf16874497443255 pf16874497443256" inlinks="pf16874497443253 pf16874497443255 pf16874497443256" path="/login.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="private/desktop.xhtml" id="pf16874497443257" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf16874497443252 pf16874497443254" path="/private/desktop.xhtml"/>
-  <links id="pf16874497443252" target="pf16874497443257" source="pf16874497443251" outcome="LOGIN_HOME_PAGE" redirect="true"/>
-  <links id="pf16874497443253" target="pf16874497443251" source="pf16874497443251" outcome="LOGIN_PAGE" redirect="true"/>
-  <links id="pf16874497443254" target="pf16874497443257" source="pf16874497443251" outcome="success" redirect="true" fromaction="#{identity.login()}"/>
-  <links id="pf16874497443255" target="pf16874497443251" source="pf16874497443251" outcome="failure" redirect="true" fromaction="#{identity.login()}"/>
-  <links id="pf16874497443256" target="pf16874497443251" source="pf16874497443251" outcome="SUCESSO" redirect="true" fromaction="#{hfsAuthenticator.logOut()}"/>
+  <links id="pf16874497443252" target="pf16874497443257" source="pf16874497443251"/>
+  <links id="pf16874497443253" target="pf16874497443251" source="pf16874497443251"/>
+  <links id="pf16874497443254" target="pf16874497443257" source="pf16874497443251"/>
+  <links id="pf16874497443255" target="pf16874497443251" source="pf16874497443251"/>
+  <links id="pf16874497443256" target="pf16874497443251" source="pf16874497443251"/>
 </pageflow:Pageflow>

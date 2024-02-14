@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="content">
+        <div class="layout-error p-5">
+            <h:graphicImage name="asset-404.svg" library="images" alt="Error"/>
+            <h1>Página não encontrada</h1>
+            <h5>Não conseguimos encontrar o que você procurava.</h5>
+            <p>Entre em contato com o proprietário do site que o vinculou ao URL original e informe que o link está quebrado.</p>
+            <p:button outcome="/index" value="Vá para a Homepage" class="secondary"/>
+        </div>
+    </ui:define>
+
+</ui:composition>

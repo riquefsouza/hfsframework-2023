@@ -1,0 +1,75 @@
+.ui-picklist .ui-picklist-list {
+	height: 250px;
+	width: 380px;
+}
+
+.picklistMaior .ui-picklist-list {
+	height: 24em !important;
+	width: 24em !important;
+}
+
+.picklistMenor .ui-picklist-list {
+	height: 15em !important;
+	width: 20em !important;
+}
+
+.picklistGrande .ui-picklist-list {
+	height: 50em !important;
+	width: 35em !important;
+}
+
+.picklistGigante .ui-picklist-list {
+	height: 50em !important;
+	width: 45em !important;
+}
+
+
+
+.crud-table-header {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap
+}
+
+.crud-demo .edit-button.ui-button {
+	margin-right: .5rem
+}
+
+.crud-demo .orders-subtable {
+	padding: 1rem
+}
+
+.crud-demo .crud-table>.ui-datatable-tablewrapper>table>thead>tr>th:nth-child(1)
+	{
+	width: 1rem
+}
+
+.crud-demo .crud-table .ui-rating {
+	display: inline-block
+}
+
+@media ( max-width : 640px) {
+	.crud-table>.ui-datatable-tablewrapper>table>thead>tr>th:nth-child(2) .ui-column-title,
+		.crud-table>.ui-datatable-tablewrapper>table>tbody>tr>td:nth-child(2) .ui-column-title
+		{
+		display: none !important
+	}
+	.crud-buttonbar {
+		-ms-flex-direction: column;
+		flex-direction: column
+	}
+	.crud-buttonbar>div:last-child {
+		margin-top: .5rem
+	}
+}
+
+.manymenu-advanced.ui-selectmanymenu .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item>td:nth-child(2)
+	{
+	width: 1rem;
+	padding: 0
+}

@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="title">
+        Categorias dos Parâmetros
+    </ui:define>
+
+    <ui:define name="implementation">
+
+
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center">
+                    
+        <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                <div class="text-center mb-5">
+					<p:graphicImage name="logo.png" library="img" class="mb-3" />
+                    
+                    <div class="text-900 text-3xl font-medium mb-3">Bem-vindo!</div>
+                    <span class="text-600 font-medium">Faça login para continuar</span>
+                </div>
+
+				<div class="ui-fluid"
+					style="margin: 0 auto; width: 350px; position: float;">
+					<p:fragment>
+						<p:autoUpdate />
+						
+						<h:form id="formAutenticacao" role="form">
+			
+							<p:panel id="panelLogin" header="Authenticate"
+								style="margin-bottom:5px">
+								<div class="ui-fluid" style="margin-bottom: 10px">
+									<div class="p-field">
+										<p:outputLabel for="username" value="Usuário:" />
+										<div class="ui-inputgroup">
+											<span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+											<p:inputText id="username" value="#{identity.userId}" 
+												placeholder="Informe seu usuário" />
+										</div>
+									</div>
+								</div>
+								<div class="ui-fluid" style="margin-bottom: 10px">
+									<div class="p-field">
+										<p:outputLabel for="password" value="Senha:" />
+										<div class="ui-inputgroup">
+											<span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
+											<p:password id="password" value="#{identity.password}" 
+												autocomplete="off" placeholder="Informe sua senha" />
+										</div>
+									</div>
+								</div>
+								<div class="ui-g">
+									<div class="ui-fluid" style="margin: 0 auto; width: 30%">
+										<p:commandButton type="submit" value="Login" ajax="false"
+											action="#{hfsAuthenticator.login}" id="btnLogin" style="margin:5px;" />
+									</div>
+								</div>
+			
+								<p:focus for="username"></p:focus>
+							</p:panel>
+			
+						</h:form>
+		
+					</p:fragment>
+				</div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    </ui:define>
+
+</ui:composition>
+

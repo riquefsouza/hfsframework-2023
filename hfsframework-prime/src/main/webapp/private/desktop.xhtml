@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html" 
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:c="jakarta.tags.core" 
+	xmlns:p="http://primefaces.org/ui"	
+	template="/template/template.xhtml">
+
+	<ui:define name="content">
+		<div class="home">
+			<div id="homepage-intro"
+				class="introduction #{app.darkMode ? 'introduction-dark' : ''}">
+				<div class="introduction-title">#{messages['main.app.welcome']}</div>
+				
+				<c:if test="#{systemMB.authenticatedUser.modeTest}">
+					
+					<br></br>
+					<br></br>
+					
+					<p style="font-weight: bold;" >ACTIVE TEST MODE</p>
+					
+					<br></br>
+					
+					<p:panelGrid columns="2">
+						<h:outputText value="Login:" />
+						<h:outputText value="#{systemMB.authenticatedUser.modeTestLogin}" />
+		
+						<h:outputText value="Login Virtual:" />
+						<h:outputText value="#{systemMB.authenticatedUser.modeTestLoginVirtual}" />				
+					</p:panelGrid>
+				</c:if>	
+				
+				
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

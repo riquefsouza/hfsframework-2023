@@ -12,18 +12,18 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.report.sourceEncoding>UTF-8</project.report.sourceEncoding>
 		
-		<maven.compiler.release>20</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 		
 		<jakartaee-api.version>10.0.0</jakartaee-api.version>
-		<wildfly.version>28.0.1.Final</wildfly.version>
+		<wildfly.version>30.0.1.Final</wildfly.version>
 		
 		<compiler-plugin.version>3.10.1</compiler-plugin.version>
 
 		<version.jar.plugin>3.3.0</version.jar.plugin>
 		<version.javadoc.plugin>3.5.0</version.javadoc.plugin>
 		
-		<primefaces.version>12.0.0</primefaces.version>
-		<primefaces-extensions.version>12.0.7</primefaces-extensions.version>
+		<primefaces.version>13.0.4</primefaces.version>
+		<primefaces-extensions.version>13.0.4</primefaces-extensions.version>
 		
 		<hibernate.version>6.2.1.Final</hibernate.version>
         <hibernate-validator.version>8.0.0.Final</hibernate-validator.version>
