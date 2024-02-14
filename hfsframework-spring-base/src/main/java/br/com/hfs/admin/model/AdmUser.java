@@ -58,7 +58,7 @@ public class AdmUser implements Serializable {
 	/** The id. */
 	@Id	
 	@GenericGenerator(name = "ADM_USER_ID_GENERATOR",
-	strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
     parameters = {
     	@Parameter(name = "sequence_name", value = "ADM_USER_SEQ"),
         @Parameter(name = "initial_value", value = "1"),

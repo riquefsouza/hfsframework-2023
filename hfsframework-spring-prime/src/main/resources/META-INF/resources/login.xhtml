@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:c="jakarta.tags.core"
+      xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:o="http://omnifaces.org/ui"
+      lang="#{p:language()}" xml:lang="#{p:language()}">
+
+<h:head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>    
+    <link rel="icon" type="image/png" href="#{resource['images/favicon.ico']}" sizes="32x32" />
+    
+    <title>Prime</title>
+
+    <ui:insert name="head"/>
+
+</h:head>
+
+<h:body>
+    <f:view locale="#{app.locale}">
+
+		<p:outputPanel id="alert-messages">
+			<p:messages id="messages"
+				styleClass="alert-messages skipModalLoading" escape="false"
+				closable="true" showDetail="true"
+				showSummary="false" infoClass="alert alert-info skipModalLoading"
+				successClass="alert alert-success skipModalLoading"
+				errorClass="alert alert-danger skipModalLoading"
+				warnClass="alert alert-warning skipModalLoading" >
+				<p:autoUpdate />
+			</p:messages>
+		</p:outputPanel>
+    
+		<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+		    <div class="flex flex-column align-items-center justify-content-center">
+		                    
+		        <div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+		            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+		                <div class="text-center mb-5">
+							<p:graphicImage name="logo.png" library="img" class="mb-3" />
+		                    
+		                    <div class="text-900 text-3xl font-medium mb-3">Bem-vindo!</div>
+		                    <span class="text-600 font-medium">Faça login para continuar</span>
+		                </div>
+		
+						<div class="ui-fluid"
+							style="margin: 0 auto; width: 350px; position: float;">
+							<p:fragment>
+								<p:autoUpdate />
+								
+								<h:form prependId="false">
+					
+									<p:panel id="panelLogin" header="Authenticate"
+										style="margin-bottom:5px">
+										<div class="ui-fluid" style="margin-bottom: 10px">
+											<div class="p-field">
+												<p:outputLabel for="username" value="Usuário:" />
+												<div class="ui-inputgroup">
+													<span class="ui-inputgroup-addon"><i class="pi pi-user"></i></span>
+													<p:inputText id="username" value="" 
+														placeholder="Informe seu usuário" />
+												</div>
+											</div>
+										</div>
+										<div class="ui-fluid" style="margin-bottom: 10px">
+											<div class="p-field">
+												<p:outputLabel for="password" value="Senha:" />
+												<div class="ui-inputgroup">
+													<span class="ui-inputgroup-addon"><i class="pi pi-lock"></i></span>
+													<p:password id="password" value="" 
+														autocomplete="off" placeholder="Informe sua senha" />
+												</div>
+											</div>
+										</div>
+										<div class="ui-g">
+											<div class="ui-fluid" style="margin: 0 auto; width: 30%">
+												<p:commandButton id="submit" value="Login" 
+													ajax="false" style="margin:5px;" />
+											</div>
+										</div>
+					
+										<p:focus for="username"></p:focus>
+									</p:panel>
+					
+								</h:form>
+				
+							</p:fragment>
+						</div>
+		
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+
+        <h:outputStylesheet name="layout/layout.css" library="css"/>
+        <h:outputStylesheet name="primeflex.css" library="css"/>
+		<h:outputStylesheet name="system.css" library="css"/>
+
+        <h:outputScript name="layout.js" library="script" target="head"/>
+        <h:outputScript name="prism.js" library="script" target="head"/>
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" target="head"/>
+        <h:outputScript name="locales/locale-#{app.locale.language}.js" library="primefaces" target="head"/>
+    </f:view>
+</h:body>
+
+</html>
+

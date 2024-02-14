@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+<ui:define name="implementation">
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+
+			<p:card>
+			    <f:facet name="title">
+			        Usuário logado
+			    </f:facet>
+                <p class="m-0">
+                    <b>ID: </b>
+
+                    <br></br>
+                    <br></br>
+                    <b>Login: </b>
+                    #{app.userAuthenticated.username}
+                    <br></br>
+                    <br></br>
+                    <b>E-mail: </b>
+
+                    <br></br>
+                    <br></br>
+                    <b>E-mail verificado: </b>
+
+                    <br></br>
+                    <br></br>
+                    <b>Nome: </b>
+
+                    <br></br>
+                    <br></br>
+                    <b>É administrador: </b>
+
+                    <br></br>
+                    <br></br>
+                    <b>Papéis: </b>
+                    <ui:repeat value="#{app.userAuthenticated.authorities}" var="role">
+                    	<li>#{role}</li>                    
+                    </ui:repeat>
+                    <br></br>
+                    <br></br>
+                    
+                </p>			    
+			</p:card>        
+        
+        </div>
+    </div>
+</div>
+
+</ui:define>
+
+</ui:composition>

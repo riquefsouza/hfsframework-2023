@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:c="jakarta.tags.core"
+      xmlns:p="http://primefaces.org/ui"
+	  xmlns:pe="http://primefaces.org/ui/extensions"
+	  xmlns:o="http://omnifaces.org/ui"
+      lang="#{p:language()}" xml:lang="#{p:language()}">
+
+<h:head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>    
+    <link rel="icon" type="image/png" href="#{resource['images/favicon.ico']}" sizes="32x32" />
+    
+    <title>Prime</title>
+
+    <ui:insert name="head"/>
+
+</h:head>
+
+<h:body>
+    <f:view locale="#{app.locale}">
+
+		<p:outputPanel id="alert-messages">
+			<p:messages id="messages"
+				styleClass="alert-messages skipModalLoading" escape="false"
+				closable="true" showDetail="true"
+				showSummary="false" infoClass="alert alert-info skipModalLoading"
+				successClass="alert alert-success skipModalLoading"
+				errorClass="alert alert-danger skipModalLoading"
+				warnClass="alert alert-warning skipModalLoading" >
+				<p:autoUpdate />
+			</p:messages>
+		</p:outputPanel>
+
+        <div class="layout-wrapper #{app.inputStyleClass}">
+            <ui:include src="./topbar.xhtml"></ui:include>
+            <ui:include src="./menu.xhtml"></ui:include>
+            <div class="layout-mask"></div>
+
+            <div class="layout-content">
+                <ui:insert name="content">
+                <!-- 
+                    <div class="content-section introduction">
+                        <div class="feature-intro">
+                            <h1><ui:insert name="title"></ui:insert></h1>
+                            <p><ui:insert name="description"></ui:insert></p>
+                        </div>
+                    </div>
+                 -->    
+                    <div class="content-section implementation">
+                        <ui:insert name="implementation"></ui:insert>
+                    </div>
+                </ui:insert>
+                <ui:include src="./footer.xhtml"></ui:include>
+            </div>
+        </div>
+	        
+        <ui:insert name="status">
+            <p:ajaxStatus styleClass="status-indicator">
+                <f:facet name="start">
+                    <i class="pi pi-spin pi-spinner" aria-hidden="true"></i>
+                </f:facet>
+
+                <f:facet name="complete">
+                    <h:outputText value=""/>
+                </f:facet>
+            </p:ajaxStatus>
+        </ui:insert>
+        
+        <ui:insert name="body"></ui:insert>
+
+        <h:outputStylesheet name="layout/layout.css" library="css"/>
+        <h:outputStylesheet name="primeflex.css" library="css"/>
+		<h:outputStylesheet name="system.css" library="css"/>
+
+        <h:outputScript name="layout.js" library="script" target="head"/>
+        <h:outputScript name="prism.js" library="script" target="head"/>
+        <h:outputScript name="jquery/jquery.js" library="primefaces" target="head"/>
+        <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" target="head"/>
+        <h:outputScript name="locales/locale-#{app.locale.language}.js" library="primefaces" target="head"/>
+    </f:view>
+</h:body>
+
+</html>

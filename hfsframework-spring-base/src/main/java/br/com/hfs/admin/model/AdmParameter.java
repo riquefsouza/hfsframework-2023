@@ -39,7 +39,7 @@ public class AdmParameter implements Serializable {
 	/** The id. */
 	@Id	
 	@GenericGenerator(name = "ADM_PARAMETER_ID_GENERATOR",
-	strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
     parameters = {
     	@Parameter(name = "sequence_name", value = "ADM_PARAMETER_SEQ"),
         @Parameter(name = "initial_value", value = "1"),

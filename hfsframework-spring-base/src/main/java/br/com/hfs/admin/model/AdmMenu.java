@@ -60,7 +60,7 @@ public class AdmMenu implements Serializable, Comparable<AdmMenu> {
 	/** The id. */
 	@Id	
 	@GenericGenerator(name = "ADM_MENU_ID_GENERATOR",
-	strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
     parameters = {
     	@Parameter(name = "sequence_name", value = "ADM_MENU_SEQ"),
         @Parameter(name = "initial_value", value = "1"),
