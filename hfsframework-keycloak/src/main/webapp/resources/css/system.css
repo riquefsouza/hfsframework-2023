@@ -1,0 +1,26 @@
+.ui-picklist .ui-picklist-list {
+	height: 250px;
+	width: 380px;
+}
+
+.picklistMaior .ui-picklist-list {
+	height: 24em !important;
+	width: 24em !important;
+}
+
+.picklistMenor .ui-picklist-list {
+	height: 15em !important;
+	width: 20em !important;
+}
+
+.picklistGrande .ui-picklist-list {
+	height: 50em !important;
+	width: 35em !important;
+}
+
+.picklistGigante .ui-picklist-list {
+	height: 50em !important;
+	width: 45em !important;
+}
+
+

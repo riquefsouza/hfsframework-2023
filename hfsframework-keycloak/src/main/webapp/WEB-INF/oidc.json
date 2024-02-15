@@ -1,0 +1,9 @@
+{
+  "realm": "hfsframework-realm",
+  "auth-server-url": "http://localhost:8080",
+  "ssl-required": "external",
+  "resource": "hfsframework-client",
+  "credentials": {
+    "secret": "secret"
+  }
+}
