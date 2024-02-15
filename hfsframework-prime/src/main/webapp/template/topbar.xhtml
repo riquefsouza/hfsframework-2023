@@ -14,7 +14,7 @@
  		-->					
         </h:link>
 
-        <h:form styleClass="topbar-form mr-4">
+        <h:form styleClass="topbar-form mr-4" style="display: none">
         
             <ul class="topbar-menu">
                 <li class="topbar-submenu">
@@ -51,12 +51,12 @@
             </ul>                        
         </h:form>
 
-		<div class="layout-topbar-menu">
+		<div class="topbar-form mr-4">
 			<h:form>
-	             <h:outputLink value="#{request.contextPath}/private/desktop.xhtml" class="link layout-topbar-button mr-4">
+	             <h:outputLink value="#{request.contextPath}/system/usuario.xhtml" class="link layout-topbar-button mr-4">
 		            <i class="pi pi-user"></i>                 
 	             </h:outputLink>
-	             <h:outputLink value="#{request.contextPath}/private/desktop.xhtml" class="link layout-topbar-button mr-4">
+	             <h:outputLink value="#{request.contextPath}/system/config.xhtml" class="link layout-topbar-button mr-4">
 		            <i class="pi pi-cog"></i>
 	             </h:outputLink>
 	            <p:commandLink action="#{hfsAuthenticator.logOut}" immediate="true" class="link layout-topbar-button mr-4">

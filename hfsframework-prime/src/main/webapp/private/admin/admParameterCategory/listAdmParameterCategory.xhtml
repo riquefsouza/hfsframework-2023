@@ -11,21 +11,21 @@
                 <p:growl id="messages" showDetail="true"/>
 
 				<p:panel id="panelBasic" header="Categoria de parâmetro de configuração"
-					style="margin-bottom:5px">
-					<div class="ui-g">
-						<div class="ui-g-12 ui-md-6 ui-lg-3">
+					styleClass="p-mb-2">
+					<div class="ui-fluid formgrid grid">
+					    <div class="field col-4 md-4">
 							<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
 							<br></br>	
 							<p:selectOneMenu id="cmbTypeReport" value="#{admParameterCategoryRelMB.typeReport}">
 								<f:selectItems value="#{admParameterCategoryRelMB.listTypeReport}" />
-							</p:selectOneMenu>
+							</p:selectOneMenu>    
 						</div>
-						<div class="ui-g-12 ui-md-6 ui-lg-3">
+					    <div class="field col-4 md-4">
 							<p:outputLabel for="forceDownload" value="Forçar download:" />
 							<p:spacer width="10" height="10" />	
-							<p:selectBooleanCheckbox id="forceDownload" value="#{admParameterCategoryRelMB.forceDownload}" />
+							<p:selectBooleanCheckbox id="forceDownload" value="#{admParameterCategoryRelMB.forceDownload}" />    
 						</div>
-					</div>
+					</div>					
 				</p:panel>
 
                 <p:toolbar>
@@ -44,16 +44,20 @@
                     </p:toolbarGroup>
                     <p:toolbarGroup align="right">						
                         <p:commandButton value="Exportar" icon="pi pi-upload" onclick="form.target='_blank'" 
-                        	action="#{admParameterCategoryRelMB.export()}" id="btnExportar" ajax="false" 
+                        	action="#{admParameterCategoryRelMB.export}" id="btnExportar" ajax="false" 
                         	styleClass="ui-button-help p-mr-2 p-mb-2" style="margin-right: .5rem">
                         </p:commandButton>
                     </p:toolbarGroup>
                 </p:toolbar>
 
                 <p:dataTable id="tabela" widgetVar="widgetTabela" var="item" value="#{admParameterCategoryMB.listaBean}"
-                             reflow="true" styleClass="crud-table"
+                             reflow="true" styleClass="crud-table" responsiveLayout="scroll"
                              selection="#{admParameterCategoryMB.selecionadosBean}" rowKey="#{item.id}" paginator="true"
-                             rows="10" rowSelectMode="add" paginatorPosition="bottom">
+                             rows="10" rowSelectMode="add" paginatorPosition="both"
+                             rowsPerPageTemplate="10,30,50,100,150,200" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="Mostrando {startRecord} até {endRecord} de {totalRecords} entradas"                             
+                             rowHover="true">
                     <f:facet name="header">
                         <div class="crud-table-header">
                             <span style="font-weight: bold">Categorias </span>
@@ -93,29 +97,29 @@
                         <p:commandButton icon="pi pi-pencil" update=":form:conteudoEditDialog"
                                          oncomplete="PF('editDialog').show()"
                                          styleClass="edit-button rounded-button ui-button-success" process="@this">
-                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.selecionadoBean}"/>
+                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.bean}"/>
                             <p:resetInput target=":form:conteudoEditDialog"/>
                         </p:commandButton>
                         <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
                                          oncomplete="PF('excluirDialog').show()">
-                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.selecionadoBean}"/>
+                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.bean}"/>
                         </p:commandButton>
                     </p:column>
 
                 </p:dataTable>
 
-                <p:dialog header="Detalhes AdmParameterCategory" showEffect="fade" modal="true"
-                          widgetVar="editDialog" responsive="true">
+                <p:dialog header="Detalhes da Categoria do parâmetro" showEffect="fade" modal="true"
+                          widgetVar="editDialog" responsive="true" position="center">
                     <p:outputPanel id="conteudoEditDialog" class="ui-fluid">
-                        <p:outputPanel rendered="#{not empty admParameterCategoryMB.selecionadoBean}">
+                        <p:outputPanel rendered="#{not empty admParameterCategoryMB.bean}">
                             <div class="field">
                                 <p:outputLabel for="description">Descrição</p:outputLabel>
-                                <p:inputTextarea id="description" value="#{admParameterCategoryMB.selecionadoBean.description}"
+                                <p:inputTextarea id="description" value="#{admParameterCategoryMB.bean.description}"
 									required="true" />
                             </div>
                             <div class="field">
                                 <p:outputLabel for="order">Ordem</p:outputLabel>
-                                <p:inputNumber id="order" value="#{admParameterCategoryMB.selecionadoBean.order}"/>
+                                <p:inputNumber id="order" value="#{admParameterCategoryMB.bean.order}"/>
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>

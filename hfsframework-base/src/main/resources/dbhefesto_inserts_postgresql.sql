@@ -57,17 +57,16 @@ INSERT INTO public.adm_profile (prf_seq,prf_administrator,prf_description,prf_ge
 INSERT INTO public.adm_user_profile (usp_seq,usp_prf_seq,usp_use_seq) VALUES
 	 (1,1,1);
 	 
-INSERT INTO public.adm_page_profile (pgl_seq,pgl_prf_seq,pgl_pag_seq) VALUES
-	 (1,1,1),
-	 (2,1,2),
-	 (3,1,3),
-	 (4,1,4),
-	 (5,1,5),
-	 (6,1,6),
-	 (7,1,7),
-	 (8,1,8),
-	 (9,1,9),
-	 (10,1,10),
-	 (11,1,11),
-	 (12,1,12);
-	 
+INSERT INTO public.adm_page_profile (pgl_prf_seq,pgl_pag_seq) VALUES
+	 (1,1),
+	 (1,2),
+	 (1,3),
+	 (1,4),
+	 (1,5),
+	 (1,6),
+	 (1,7),
+	 (1,8),
+	 (1,9),
+	 (1,10),
+	 (1,11),
+	 (1,12);	 

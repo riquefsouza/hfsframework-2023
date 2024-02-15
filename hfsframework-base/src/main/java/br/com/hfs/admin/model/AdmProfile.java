@@ -39,7 +39,7 @@ import jakarta.validation.constraints.Size;
 	@NamedQuery(name = "AdmProfile.findPagesByProfile", query = "SELECT distinct pag FROM AdmProfile p inner join p.admPages pag where p = ?1"),
 	@NamedQuery(name = "AdmProfile.findUsersByProfile", query = "SELECT distinct fp.userSeq FROM AdmProfile p, AdmUserProfile fp where p.id = fp.profileSeq AND p = ?1"),
 	@NamedQuery(name = "AdmProfile.findProfilesByUser", query = "SELECT distinct p FROM AdmProfile p, AdmUserProfile fp where p.id = fp.profileSeq AND fp.userSeq = ?1"),
-	@NamedQuery(name = "AdmProfile.findProfilesByPage", query = "SELECT distinct p FROM AdmProfile p, AdmPageProfile fp where p.id = fp.profileSeq AND fp.pageSeq = ?1"),
+	@NamedQuery(name = "AdmProfile.findProfilesByPage", query = "SELECT distinct p FROM AdmProfile p inner join p.admPages pag where pag.id = ?1"),
 	@NamedQuery(name = "AdmProfile.findAdminMenuParentByProfile", query="SELECT DISTINCT t FROM AdmMenu t WHERE t.id IN (SELECT m.admMenuParent.id FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id <= 9) ORDER BY t.order, t.id"),
 	@NamedQuery(name = "AdmProfile.findMenuParentByProfile", query="SELECT DISTINCT t FROM AdmMenu t WHERE t.id IN (SELECT m.admMenuParent.id FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id > 9) ORDER BY t.order, t.id"),
 	@NamedQuery(name = "AdmProfile.findAdminMenuByProfile", query="SELECT DISTINCT m FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id <= 9 AND m.admMenuParent = ?2 ORDER BY m.order, m.id"),
@@ -300,6 +300,18 @@ public class AdmProfile implements Serializable {
 	public String toString() {
 		return description;
 	}
+	
+	public String getPagesProfile() {
+		String ret = "";
+		for (AdmPage item : getAdmPages()) {
+			ret = ret.concat(item.getDescription()).concat(", ");
+		}
+		if (ret != "") {
+			ret = ret.substring(0, ret.length() - 2);
+		}
+		return ret;
+	}
+	
 	
 	public ProfileVO toProfileVO(){
 		ProfileVO p = new ProfileVO();

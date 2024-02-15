@@ -13,6 +13,11 @@ App = {
         this.configuratorCloseButton = $('#layout-config-close-button');
         this.filterPanel = $('.layout-sidebar-filter-panel');
         this.activeSubmenus = [];
+
+        this.scale = 14;
+        this.scales = [12, 13, 14, 15, 16];
+        this.decrementScale();
+        this.incrementScale();
         
         this._bindEvents();
         this.restoreMenu();
@@ -180,6 +185,18 @@ App = {
             $('#' + id).next().show();
             sessionStorage.setItem('active_submenus', this.activeSubmenus.join(','));
         }
+    },
+    
+    decrementScale: function() {
+        this.scale--;
+        
+        document.documentElement.style.fontSize = `${this.scale}px`;        
+    },
+
+    incrementScale: function() {
+        this.scale++;
+        
+        document.documentElement.style.fontSize = `${this.scale}px`;        
     }
 }
 

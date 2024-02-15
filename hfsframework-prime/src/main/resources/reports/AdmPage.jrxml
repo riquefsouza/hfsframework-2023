@@ -7,7 +7,7 @@
 	<parameter name="PARAMETER1" class="java.lang.String"/>
 	<field name="managedBean" class="java.lang.String"/>
 	<field name="url" class="java.lang.String"/>
-	<field name="admPerfils" class="java.util.List"/>
+	<field name="admPerfils" class="java.util.Collection"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

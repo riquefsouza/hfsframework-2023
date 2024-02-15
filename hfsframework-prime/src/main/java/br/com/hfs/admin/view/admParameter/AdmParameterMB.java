@@ -1,4 +1,4 @@
-package br.com.hfs.admin.view.admParameterCategory;
+package br.com.hfs.admin.view.admParameter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,8 +8,10 @@ import java.util.stream.IntStream;
 
 import org.primefaces.PrimeFaces;
 
+import br.com.hfs.admin.model.AdmParameter;
 import br.com.hfs.admin.model.AdmParameterCategory;
 import br.com.hfs.admin.service.AdmParameterCategoryService;
+import br.com.hfs.admin.service.AdmParameterService;
 import br.com.hfs.util.interceptors.HandlingExpectedErrors;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
@@ -21,54 +23,63 @@ import jakarta.inject.Named;
 @Named
 @ViewScoped
 @HandlingExpectedErrors
-public class AdmParameterCategoryMB implements Serializable {
+public class AdmParameterMB implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Inject
-	private AdmParameterCategoryService service;
+	private AdmParameterService service;
 	
-	private List<AdmParameterCategory> listaBean;
+	private List<AdmParameter> listaBean;
 	
-	private AdmParameterCategory bean;
+	private AdmParameter bean;
 	
-	private List<AdmParameterCategory> selecionadosBean;
+	private List<AdmParameter> selecionadosBean;
+
+	@Inject
+	private AdmParameterCategoryService admParameterCategoryService;
+
+	private List<AdmParameterCategory> listAdmParameterCategory;
 
 	@PostConstruct
 	public void init() {
 		this.listaBean = this.service.findAll();
 		this.selecionadosBean = new ArrayList<>();
+		listAdmParameterCategory = admParameterCategoryService.findAll();
 	}
 
-	public List<AdmParameterCategory> getListaBean() {
+	public List<AdmParameter> getListaBean() {
 		return listaBean;
 	}
 
-	public AdmParameterCategory getBean() {
+	public AdmParameter getBean() {
 		return bean;
 	}
 
-	public void setBean(AdmParameterCategory bean) {
+	public void setBean(AdmParameter bean) {
 		this.bean = bean;
 	}
 
-	public List<AdmParameterCategory> getSelecionadosBean() {
+	public List<AdmParameter> getSelecionadosBean() {
 		return selecionadosBean;
 	}
 
-	public void setSelecionadosBean(List<AdmParameterCategory> selecionadosBean) {
+	public void setSelecionadosBean(List<AdmParameter> selecionadosBean) {
 		this.selecionadosBean = selecionadosBean;
 	}
 
 	public void adicionar() {
-		this.bean = new AdmParameterCategory();
+		this.bean = new AdmParameter();
+		setAdmParameterCategory(this.bean);
 	}
 	
 	public void salvar() {
+		this.bean.setIdAdmParameterCategory(this.bean.getAdmParameterCategory().getId());
+		
 		if (this.bean.getId() == null) {
 			this.listaBean.add(this.service.insert(this.bean));
 			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Adicionado"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Adicionado"));
 		} else {
 			OptionalInt indice = IntStream
 		      .range(0, listaBean.size())
@@ -77,9 +88,9 @@ public class AdmParameterCategoryMB implements Serializable {
 		      .findFirst();
 			
 			if (!indice.isEmpty()) {
-				AdmParameterCategory obj = listaBean.get(indice.getAsInt());
+				AdmParameter obj = listaBean.get(indice.getAsInt());
 				this.listaBean.set(indice.getAsInt(), this.service.update(obj));			
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Atualizado"));				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Atualizado"));				
 			}
 		}
 
@@ -91,14 +102,14 @@ public class AdmParameterCategoryMB implements Serializable {
 		this.service.delete(this.bean);
 		this.listaBean.remove(this.bean);
 		this.bean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Excluído"));
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Excluído"));
 		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
 	}
 
 	public String getDeleteButtonMessage() {
 		if (hasSelecionadosBean()) {
 			int size = this.selecionadosBean.size();
-			return size > 1 ? size + " Categorias do Parâmetros selecionados" : "1 Categoria do Parâmetro selecionado";
+			return size > 1 ? size + " Parâmetros selecionados" : "1 Parâmetro selecionado";
 		}
 
 		return "Excluir";
@@ -112,9 +123,30 @@ public class AdmParameterCategoryMB implements Serializable {
 		this.service.delete(this.selecionadosBean);
 		this.listaBean.removeAll(this.selecionadosBean);
 		this.selecionadosBean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categorias dos Parâmetros Excluídos"));
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetros Excluídos"));
 		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
 		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
 	}
 
+	public void selectAdmParameterCategory(AdmParameter bean) {
+		AdmParameterCategory admParametroCategoria = admParameterCategoryService
+				.findById(bean.getAdmParameterCategory().getId()).get();
+		bean.setAdmParameterCategory(admParametroCategoria);
+	}
+	
+	private void setAdmParameterCategory(AdmParameter bean) {
+		if (bean.getAdmParameterCategory() != null && listAdmParameterCategory.size() > 0) {
+			bean.getAdmParameterCategory().setId(listAdmParameterCategory.get(0).getId());
+			selectAdmParameterCategory(bean);
+		}		
+	}
+	
+	public List<AdmParameterCategory> getListAdmParameterCategory() {
+		return listAdmParameterCategory;
+	}
+
+	public void setListaAdmParameterCategory(List<AdmParameterCategory> listAdmParameterCategory) {
+		this.listAdmParameterCategory = listAdmParameterCategory;
+	}
+	
 }

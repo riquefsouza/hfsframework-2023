@@ -8,8 +8,8 @@
 	<field name="administrator" class="java.lang.Boolean"/>
 	<field name="description" class="java.lang.String"/>
 	<field name="general" class="java.lang.Boolean"/>
-	<field name="admUsers" class="java.util.List"/>
-	<field name="admPages" class="java.util.List"/>
+	<field name="admUsers" class="java.util.Collection"/>
+	<field name="admPages" class="java.util.Collection"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

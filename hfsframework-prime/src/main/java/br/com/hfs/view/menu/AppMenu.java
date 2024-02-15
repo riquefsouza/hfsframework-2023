@@ -23,7 +23,16 @@ public class AppMenu {
         //AJAX FRAMEWORK CATEGORY START
         List<MenuItem> adminMenuItems = new ArrayList<>();
         adminMenuItems.add(new MenuItem("Categoria dos Parâmetros", "private/admin/admParameterCategory/listAdmParameterCategory.xhtml"));
+        adminMenuItems.add(new MenuItem("Parâmetros", "private/admin/admParameter/listAdmParameter.xhtml"));        
+        adminMenuItems.add(new MenuItem("Perfis", "private/admin/admProfile/listAdmProfile.xhtml"));
+        adminMenuItems.add(new MenuItem("Páginas", "private/admin/admPage/listAdmPage.xhtml"));
+        adminMenuItems.add(new MenuItem("Menus", "private/admin/admMenu/listAdmMenu.xhtml"));
         menuCategoria.add(new MenuCategory("Administrativo", adminMenuItems));
+        
+        List<MenuItem> sistemaMenuItems = new ArrayList<>();
+        sistemaMenuItems.add(new MenuItem("Usuário logado", "system/usuario.xhtml"));
+        sistemaMenuItems.add(new MenuItem("Configuração de Tela", "system/config.xhtml"));
+        menuCategoria.add(new MenuCategory("Sistema", sistemaMenuItems));
         //AJAX FRAMEWORK CATEGORY END
 
         for (MenuCategory category : menuCategoria) {

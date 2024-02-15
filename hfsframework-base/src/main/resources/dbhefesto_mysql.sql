@@ -62,15 +62,13 @@ create table adm_user (
 );
 
 create table adm_page_profile (
-	pgl_seq bigint auto_increment not null,
 	pgl_prf_seq bigint not null,
 	pgl_pag_seq bigint not null,
-	constraint adm_page_profile_pkey primary key (pgl_seq),
-	constraint adm_page_profile_uk unique (pgl_pag_seq, pgl_prf_seq),
+	constraint adm_page_profile_pkey primary key (pgl_pag_seq, pgl_prf_seq),
 	constraint adm_pgl_page_fkey foreign key (pgl_pag_seq) references adm_page(pag_seq),
 	constraint adm_pgl_profile_fkey foreign key (pgl_prf_seq) references adm_profile(prf_seq)
 );
-    
+
 create table adm_user_profile (
 	usp_seq bigint auto_increment not null,
 	usp_prf_seq bigint not null,

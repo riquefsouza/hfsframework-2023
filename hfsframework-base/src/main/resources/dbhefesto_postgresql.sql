@@ -61,14 +61,12 @@ create table adm_user (
 	constraint adm_user_password_uk unique (usu_password)
 );
 
-create table adm_page_profile (
-	pgl_seq bigint not null,
-	pgl_prf_seq bigint not null,
-	pgl_pag_seq bigint not null,
-	constraint adm_page_profile_pkey primary key (pgl_seq),
-	constraint adm_page_profile_uk unique (pgl_pag_seq, pgl_prf_seq),
-	constraint adm_pgl_page_fkey foreign key (pgl_pag_seq) references adm_page(pag_seq),
-	constraint adm_pgl_profile_fkey foreign key (pgl_prf_seq) references adm_profile(prf_seq)
+CREATE TABLE public.adm_page_profile (
+	pgl_prf_seq int8 NOT NULL,
+	pgl_pag_seq int8 NOT NULL,
+	CONSTRAINT adm_page_profile_pkey PRIMARY KEY (pgl_prf_seq, pgl_pag_seq),
+	CONSTRAINT adm_pgl_page_fkey FOREIGN KEY (pgl_pag_seq) REFERENCES public.adm_page(pag_seq),
+	CONSTRAINT adm_pgl_profile_fkey FOREIGN KEY (pgl_prf_seq) REFERENCES public.adm_profile(prf_seq)
 );
     
 create table adm_user_profile (
@@ -127,15 +125,7 @@ CREATE SEQUENCE adm_user_seq
 	MAXVALUE 9223372036854775807
 	START 1
 	CACHE 1
-	NO CYCLE;    
-
-CREATE SEQUENCE adm_page_profile_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 9223372036854775807
-	START 1
-	CACHE 1
-	NO CYCLE;    
+	NO CYCLE;      
 
 CREATE SEQUENCE adm_user_profile_seq
 	INCREMENT BY 1

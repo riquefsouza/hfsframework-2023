@@ -72,14 +72,6 @@ maxvalue 9223372036854775807
 cycle
 cache;
 
-CREATE SEQUENCE adm_page_profile_seq
-as [bigint]
-start with 1
-increment by 1
-minvalue 1
-maxvalue 9223372036854775807
-cycle
-cache;
 
 CREATE SEQUENCE adm_user_profile_seq
 as [bigint]
@@ -155,11 +147,9 @@ create table adm_user (
 );
 
 create table adm_page_profile (
-	pgl_seq bigint not null DEFAULT (NEXT VALUE FOR adm_page_profile_seq),
 	pgl_prf_seq bigint not null,
 	pgl_pag_seq bigint not null,
-	constraint adm_page_profile_pkey primary key (pgl_seq),
-	constraint adm_page_profile_uk unique (pgl_pag_seq, pgl_prf_seq),
+	constraint adm_page_profile_pkey primary key (pgl_pag_seq, pgl_prf_seq),
 	constraint adm_pgl_page_fkey foreign key (pgl_pag_seq) references adm_page(pag_seq),
 	constraint adm_pgl_profile_fkey foreign key (pgl_prf_seq) references adm_profile(prf_seq)
 );
