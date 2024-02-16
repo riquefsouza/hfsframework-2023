@@ -70,3 +70,34 @@ INSERT INTO public.adm_page_profile (pgl_prf_seq,pgl_pag_seq) VALUES
 	 (1,10),
 	 (1,11),
 	 (1,12);	 
+	 
+	 
+INSERT INTO public.adm_page(pag_seq, pag_description, pag_url)
+VALUES(13, 'Categoria dos Parâmetros', 'admin/admParameterCategory.xhtml');
+INSERT INTO public.adm_page
+(pag_seq, pag_description, pag_url)
+VALUES(14, 'Parâmetros', 'admin/admParameter.xhtml');
+INSERT INTO public.adm_page
+(pag_seq, pag_description, pag_url)
+VALUES(15, 'Perfis', 'admin/admProfile.xhtml');
+INSERT INTO public.adm_page
+(pag_seq, pag_description, pag_url)
+VALUES(16, 'Páginas', 'admin/admPage.xhtml');
+INSERT INTO public.adm_page
+(pag_seq, pag_description, pag_url)
+VALUES(17, 'Menus', 'admin/admMenu.xhtml');
+
+INSERT INTO public.adm_page_profile(pgl_prf_seq, pgl_pag_seq) VALUES(1, 13);
+INSERT INTO public.adm_page_profile(pgl_prf_seq, pgl_pag_seq) VALUES(1, 14);
+INSERT INTO public.adm_page_profile(pgl_prf_seq, pgl_pag_seq) VALUES(1, 15);
+INSERT INTO public.adm_page_profile(pgl_prf_seq, pgl_pag_seq) VALUES(1, 16);
+INSERT INTO public.adm_page_profile(pgl_prf_seq, pgl_pag_seq) VALUES(1, 17);
+
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(11, 'Administrativo', NULL, NULL, 1);
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(12, 'Categoria dos Parâmetros', 11, 13, 2);
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(13, 'Parâmetros', 11, 14, 3);
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(14, 'Perfis', 11, 15, 4);
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(15, 'Páginas', 11, 16, 5);
+INSERT INTO public.adm_menu(mnu_seq, mnu_description, mnu_parent_seq, mnu_pag_seq, mnu_order) VALUES(16, 'Menus', 11, 17, 6);
+
+

@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+<ui:define name="implementation">
+	<h:form id="editAdmUser">
+		<div class="card crud-demo">
+			<p:panel id="panelBasic" header="Manage User"
+				style="margin-bottom:5px">
+	
+	            <p:toolbar>
+	                <p:toolbarGroup align="right">                                       
+						<p:commandButton id="btnSave" value="Save" ajax="false"
+							icon="pi pi-check" styleClass="ui-button-success mr-2"
+							action="#{admUserMB.save()}"
+							title="Save a user" />
+						
+						<p:commandButton value="Clean" id="btnClean"
+							icon="pi pi-star" styleClass="ui-button-primary mr-2"
+							type="reset" title="Clean Fields" />							
+					
+						<p:commandButton value="Cancel" immediate="true" ajax="false" 
+							icon="pi pi-times" styleClass="ui-button-secondary" 						 
+							action="#{admUserMB.cancelEdition()}" 
+							id="btnCancel" title="Cancel" />    
+	                </p:toolbarGroup>
+	            </p:toolbar>
+
+				<p:outputPanel class="card ui-fluid">
+					<div class="field">
+						<p:outputLabel for="login" value="Login:" />
+						<p:inputText id="login" label="Login" required="true"
+							style="width: 100%"
+							value="#{admUserMB.bean.login}" maxlength="80">
+						</p:inputText>
+					</div>
+					<div class="field">
+						<p:outputLabel for="name" value="Name:" />
+						<p:inputText id="name" label="Name" required="true"
+							style="width: 100%"
+							value="#{admUserMB.bean.name}" maxlength="80">
+						</p:inputText>
+					</div>
+					<div class="field">
+						<p:outputLabel for="email" value="E-mail:" />
+						<p:inputText id="email" label="E-mail" required="true"
+							style="width: 100%"
+							value="#{admUserMB.bean.email}" maxlength="80">
+						</p:inputText>
+					</div>				
+				</p:outputPanel>
+			</p:panel>
+		</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

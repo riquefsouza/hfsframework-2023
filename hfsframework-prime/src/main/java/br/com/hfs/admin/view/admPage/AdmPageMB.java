@@ -1,180 +1,185 @@
+/**
+ * <p><b>HFS Framework</b></p>
+ * @author Henrique Figueiredo de Souza
+ * @version 1.0
+ * @since 2019
+ */
 package br.com.hfs.admin.view.admPage;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
-import org.primefaces.PrimeFaces;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import org.primefaces.model.DualListModel;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
 
 import br.com.hfs.admin.model.AdmPage;
 import br.com.hfs.admin.model.AdmProfile;
 import br.com.hfs.admin.service.AdmPageService;
 import br.com.hfs.admin.service.AdmProfileService;
+import br.com.hfs.base.BaseViewRegister;
+import br.com.hfs.base.IBaseViewRegister;
 import br.com.hfs.util.interceptors.HandlingExpectedErrors;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @Named
 @ViewScoped
 @HandlingExpectedErrors
-public class AdmPageMB implements Serializable {
+public class AdmPageMB extends BaseViewRegister<AdmPage, Long, AdmPageService> implements IBaseViewRegister<AdmPage> {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	private boolean modoEditar = false;
-	
-	@Inject
-	private AdmPageService service;
-	
-	private List<AdmPage> listaBean;
-	
-	private AdmPage bean;
-	
-	private List<AdmPage> selecionadosBean;
 
 	@Inject
 	private AdmProfileService admProfileService;
 
+	/** The dual list adm perfil. */
 	private DualListModel<AdmProfile> dualListAdmProfile;
 
+	/** The lista adm perfil. */
 	private List<AdmProfile> listaAdmProfile;
+	
+	public AdmPageMB() {
+		super(AdmPage.class, 
+				"admin/admPage/listAdmPage", 
+				"admin/admPage/editAdmPage");
+	}
 
 	@PostConstruct
 	public void init() {
-		this.listaBean = this.service.findAll();
-		this.selecionadosBean = new ArrayList<>();
+		updateDataTableList();
+		
+		if (beanInSession()) {
+			onEditMode(getBean());
+		}
+		
+		onInserMode();
 	}
 
 	private void loadAdmPerfis(AdmPage bean) {
-	    if (bean == null) {
-			this.listaAdmProfile = admProfileService.findAll();
-			this.dualListAdmProfile = new DualListModel<AdmProfile>(this.listaAdmProfile, new ArrayList<AdmProfile>());
-	    } else {  		
-			List<AdmProfile> listaAdmProfileSelecionado = bean.getId() == null ? new ArrayList<AdmProfile>()
-					: this.service.findProfilesByPage(bean);
-			this.listaAdmProfile = admProfileService.findAll();
-			this.listaAdmProfile.removeAll(listaAdmProfileSelecionado);
-			this.dualListAdmProfile = new DualListModel<AdmProfile>(this.listaAdmProfile, listaAdmProfileSelecionado);
-	    }
+		List<AdmProfile> listaAdmProfileSelecionado = bean.getId() == null ? new ArrayList<AdmProfile>()
+				: this.getService().findProfilesByPage(bean);
+		this.listaAdmProfile = admProfileService.findAll();
+		this.listaAdmProfile.removeAll(listaAdmProfileSelecionado);
+		this.dualListAdmProfile = new DualListModel<AdmProfile>(this.listaAdmProfile, listaAdmProfileSelecionado);
 	}
 
-	public List<AdmPage> getListaBean() {
-		return listaBean;
-	}
-
-	public AdmPage getBean() {
-		return bean;
-	}
-
-	public void setBean(AdmPage bean) {
-		this.bean = bean;
-	}
-
-	public List<AdmPage> getSelecionadosBean() {
-		return selecionadosBean;
-	}
-
-	public void setSelecionadosBean(List<AdmPage> selecionadosBean) {
-		this.selecionadosBean = selecionadosBean;
-	}
-
-	public boolean isModoEditar() {
-		return modoEditar;
-	}
-
-	public void limpar() {
-		this.bean.clean();
-		this.loadAdmPerfis(null);
-	}
-
-	public void adicionar() {
-		this.modoEditar = true;
-		this.bean = new AdmPage();
-		this.loadAdmPerfis(null);
+	@Override
+	public String onInsert() {
+		return super.onInsert(new AdmPage());
 	}
 	
-	public void editar(AdmPage item) {
-		this.modoEditar = true;
-		this.bean = item;
-		this.loadAdmPerfis(bean);
-	}
-
-	public void cancelarEditar() {
-	    this.modoEditar = false;
+	private void onInserMode() {
+		if (getState().isInsertMode()) {
+			this.listaAdmProfile = admProfileService.findAll();
+		    this.dualListAdmProfile = new DualListModel<AdmProfile>(this.listaAdmProfile, new ArrayList<AdmProfile>());
+		}
 	}
 	
-	public void salvar() {
+	private void onEditMode(AdmPage bean) {
+		if (getState().isEditMode()) {
+			loadAdmPerfis(bean);
+		}
+	}
+	
+	@Override
+	public String onEdit(AdmPage entity) {
+		return super.onEdit(entity);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#salvar()
+	 */
+	@Override
+	public String save() {
 		getBean().setAdmProfiles(new HashSet<AdmProfile>(this.dualListAdmProfile.getTarget()));
-		
-		if (this.bean.getId() == null) {
-			this.listaBean.add(this.service.insert(this.bean));
-			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Página Adicionada"));
-		} else {
-			OptionalInt indice = IntStream
-		      .range(0, listaBean.size())
-		      .filter(i -> listaBean.get(i).getId().equals(this.bean.getId()))
-		      //.mapToObj(i -> listaBean.get(i))
-		      .findFirst();
-			
-			if (!indice.isEmpty()) {
-				AdmPage obj = listaBean.get(indice.getAsInt());
-				this.listaBean.set(indice.getAsInt(), this.service.update(obj));			
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Página Atualizada"));				
-			}
-		}
-
-		this.modoEditar = false;
+		return super.save(getBean().getId());
 	}
 
-	public void chamarDialogExcluir(AdmPage item) {
-		this.bean = item;
-		PrimeFaces.current().executeScript("PF('excluirDialog').show()");
-	}
-	
-	public void excluir() {
-		this.service.delete(this.bean);
-		this.listaBean.remove(this.bean);
-		this.bean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Página Excluída"));
+	@Override
+	public void delete(AdmPage entity) {
+		super.delete(entity);
 	}
 
-	public String getDeleteButtonMessage() {
-		if (hasSelecionadosBean()) {
-			int size = this.selecionadosBean.size();
-			return size > 1 ? size + " Páginas selecionadas" : "1 Página selecionada";
-		}
-
-		return "Excluir";
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.jus.trt1.hfsframework.base.IBaseViewCadastro#preProcessPDF(java.lang
+	 * .Object)
+	 */
+	@Override
+	public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+		super.preProcessPDF(document, "AdmPage");
 	}
 
-	public boolean hasSelecionadosBean() {
-		return this.selecionadosBean != null && !this.selecionadosBean.isEmpty();
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#getBean()
+	 */
+	@Override
+	public AdmPage getBean() {
+		return super.getEntity();
 	}
 
-	public void deleteSelecionadosBean() {
-		this.service.delete(this.selecionadosBean);
-		this.listaBean.removeAll(this.selecionadosBean);
-		this.selecionadosBean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Páginas Excluídas"));
-		PrimeFaces.current().ajax().update("formAdmPage:messages", "formAdmPage:tabela");
-		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#setBean(java.lang.
+	 * Object)
+	 */
+	@Override
+	public void setBean(AdmPage entity) {
+		super.setEntity(entity);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#getListaBean()
+	 */
+	@Override
+	public List<AdmPage> getListBean() {
+		return super.getListEntity();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * br.jus.trt1.hfsframework.base.IBaseViewCadastro#setListaBean(java.util.
+	 * List)
+	 */
+	@Override
+	public void setListBean(List<AdmPage> listEntity) {
+		super.setListEntity(listEntity);
+	}
+
+	/**
+	 * Gets the dual list adm perfil.
+	 *
+	 * @return the dual list adm perfil
+	 */
 	public DualListModel<AdmProfile> getDualListAdmProfile() {
 		return dualListAdmProfile;
 	}
 		
+	/**
+	 * Sets the dual list adm perfil.
+	 *
+	 * @param dualListAdmProfile the new dual list adm perfil
+	 */
 	public void setDualListAdmProfile(DualListModel<AdmProfile> dualListAdmProfile) {
 		this.dualListAdmProfile = dualListAdmProfile;
 	}
-	
 }

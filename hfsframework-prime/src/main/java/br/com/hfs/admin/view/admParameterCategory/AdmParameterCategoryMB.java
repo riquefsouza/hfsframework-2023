@@ -1,120 +1,76 @@
 package br.com.hfs.admin.view.admParameterCategory;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
-import org.primefaces.PrimeFaces;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
 
 import br.com.hfs.admin.model.AdmParameterCategory;
 import br.com.hfs.admin.service.AdmParameterCategoryService;
+import br.com.hfs.base.BaseViewRegister;
+import br.com.hfs.base.IBaseViewRegister;
 import br.com.hfs.util.interceptors.HandlingExpectedErrors;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @Named
 @ViewScoped
 @HandlingExpectedErrors
-public class AdmParameterCategoryMB implements Serializable {
+public class AdmParameterCategoryMB
+		extends BaseViewRegister<AdmParameterCategory, Long, AdmParameterCategoryService>
+		implements IBaseViewRegister<AdmParameterCategory> {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	@Inject
-	private AdmParameterCategoryService service;
+	public AdmParameterCategoryMB(){
+		super(AdmParameterCategory.class,
+				"admin/admParameterCategory/listAdmParameterCategory", 
+				"admin/admParameterCategory/editAdmParameterCategory");
+	}
 	
-	private List<AdmParameterCategory> listaBean;
-	
-	private AdmParameterCategory bean;
-	
-	private List<AdmParameterCategory> selecionadosBean;
-
 	@PostConstruct
 	public void init() {
-		this.listaBean = this.service.findAll();
-		this.selecionadosBean = new ArrayList<>();
+		updateDataTableList();
+		beanInSession();
 	}
 
-	public List<AdmParameterCategory> getListaBean() {
-		return listaBean;
-	}
-
-	public AdmParameterCategory getBean() {
-		return bean;
-	}
-
-	public void setBean(AdmParameterCategory bean) {
-		this.bean = bean;
-	}
-
-	public List<AdmParameterCategory> getSelecionadosBean() {
-		return selecionadosBean;
-	}
-
-	public void setSelecionadosBean(List<AdmParameterCategory> selecionadosBean) {
-		this.selecionadosBean = selecionadosBean;
-	}
-
-	public void adicionar() {
-		this.bean = new AdmParameterCategory();
+	@Override
+	public String onInsert() {
+		return super.onInsert(new AdmParameterCategory());
 	}
 	
-	public void salvar() {
-		if (this.bean.getId() == null) {
-			this.listaBean.add(this.service.insert(this.bean));
-			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Adicionado"));
-		} else {
-			OptionalInt indice = IntStream
-		      .range(0, listaBean.size())
-		      .filter(i -> listaBean.get(i).getId().equals(this.bean.getId()))
-		      //.mapToObj(i -> listaBean.get(i))
-		      .findFirst();
-			
-			if (!indice.isEmpty()) {
-				AdmParameterCategory obj = listaBean.get(indice.getAsInt());
-				this.listaBean.set(indice.getAsInt(), this.service.update(obj));			
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Atualizado"));				
-			}
-		}
-
-		PrimeFaces.current().executeScript("PF('editDialog').hide()");
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
+	@Override
+	public String save() {
+		return super.save(getEntity().getId(), getEntity().getDescription());
 	}
 
-	public void excluir() {
-		this.service.delete(this.bean);
-		this.listaBean.remove(this.bean);
-		this.bean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Excluído"));
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
+	@Override
+	public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+		super.preProcessPDF(document, "AdmParameterCategory");
 	}
 
-	public String getDeleteButtonMessage() {
-		if (hasSelecionadosBean()) {
-			int size = this.selecionadosBean.size();
-			return size > 1 ? size + " Categorias do Parâmetros selecionados" : "1 Categoria do Parâmetro selecionado";
-		}
-
-		return "Excluir";
+	@Override
+	public AdmParameterCategory getBean() {
+		return super.getEntity();
 	}
 
-	public boolean hasSelecionadosBean() {
-		return this.selecionadosBean != null && !this.selecionadosBean.isEmpty();
+	@Override
+	public void setBean(AdmParameterCategory entity) {
+		super.setEntity(entity);
 	}
 
-	public void deleteSelecionadosBean() {
-		this.service.delete(this.selecionadosBean);
-		this.listaBean.removeAll(this.selecionadosBean);
-		this.selecionadosBean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categorias dos Parâmetros Excluídos"));
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
-		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
+	@Override
+	public List<AdmParameterCategory> getListBean() {
+		return super.getListEntity();
+	}
+
+	@Override
+	public void setListBean(List<AdmParameterCategory> listEntity) {
+		super.setListEntity(listEntity);
 	}
 
 }

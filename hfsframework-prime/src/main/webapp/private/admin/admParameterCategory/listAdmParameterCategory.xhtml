@@ -6,148 +6,104 @@
                 template="/template/template.xhtml">
 
     <ui:define name="implementation">
-        <h:form id="form">
-            <div class="card crud-demo">
-                <p:growl id="messages" showDetail="true"/>
+		<h:form id="listAdmParameterCategory">
+		<div class="card crud-demo">
+			<p:panel id="panelBasic" header="Configuration Parameter Category" styleClass="mb-2">
+				<div class="ui-fluid formgrid grid">
+				    <div class="field col-4 md-4">
+						<p:outputLabel for="cmbTypeReport"
+							value="Choose the type of report:" />
+						<p:selectOneMenu id="cmbTypeReport"
+							value="#{admParameterCategoryRelMB.typeReport}">
+							<f:selectItems
+								value="#{admParameterCategoryRelMB.listTypeReport}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="field col-4 md-4">
+						<p:outputLabel for="forceDownload" value="Force Download:" />
+						<p:spacer width="10" height="10" />	
+						<p:selectBooleanCheckbox id="forceDownload"
+							value="#{admParameterCategoryRelMB.forceDownload}" />
+					</div>
+				</div>
+			</p:panel>
 
-				<p:panel id="panelBasic" header="Categoria de parâmetro de configuração"
-					styleClass="p-mb-2">
-					<div class="ui-fluid formgrid grid">
-					    <div class="field col-4 md-4">
-							<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
-							<br></br>	
-							<p:selectOneMenu id="cmbTypeReport" value="#{admParameterCategoryRelMB.typeReport}">
-								<f:selectItems value="#{admParameterCategoryRelMB.listTypeReport}" />
-							</p:selectOneMenu>    
-						</div>
-					    <div class="field col-4 md-4">
-							<p:outputLabel for="forceDownload" value="Forçar download:" />
-							<p:spacer width="10" height="10" />	
-							<p:selectBooleanCheckbox id="forceDownload" value="#{admParameterCategoryRelMB.forceDownload}" />    
-						</div>
-					</div>					
-				</p:panel>
+            <p:toolbar>
+                <p:toolbarGroup align="right">                                       
+   					<p:commandButton value="Export" title="Export" onclick="form.target='_blank'"
+   					 	icon="pi pi-upload" styleClass="ui-button-help mr-2"
+   						id="btnExport" action="#{admParameterCategoryRelMB.export()}"
+						ajax="false" />
+				
+					<p:commandButton id="btnInsert" value="Insert"
+					 	icon="pi pi-plus" styleClass="ui-button-success mr-2"						
+						action="#{admParameterCategoryMB.onInsert()}"
+						title="Insert a new parameter category" />
 
-                <p:toolbar>
-                    <p:toolbarGroup>
-                        <p:commandButton value="Adicionar" icon="pi pi-plus" actionListener="#{admParameterCategoryMB.adicionar}"
-                                         update=":form:conteudoEditDialog" oncomplete="PF('editDialog').show()"
-                                         styleClass="ui-button-success" style="margin-right: .5rem">
-                            <p:resetInput target=":form:conteudoEditDialog"/>
-                        </p:commandButton>
-                        <p:commandButton id="btnDelete" value="#{admParameterCategoryMB.deleteButtonMessage}"
-                                         icon="pi pi-trash" actionListener="#{admParameterCategoryMB.deleteSelecionadosBean}"
-                                         styleClass="ui-button-danger" disabled="#{!admParameterCategoryMB.hasSelecionadosBean()}"
-                                         update="@this">
-                                <p:confirm header="Confirmation" message="Excluir a categoria de parâmetro selecionada?" icon="pi pi-exclamation-triangle" />
-                        </p:commandButton>
-                    </p:toolbarGroup>
-                    <p:toolbarGroup align="right">						
-                        <p:commandButton value="Exportar" icon="pi pi-upload" onclick="form.target='_blank'" 
-                        	action="#{admParameterCategoryRelMB.export}" id="btnExportar" ajax="false" 
-                        	styleClass="ui-button-help p-mr-2 p-mb-2" style="margin-right: .5rem">
-                        </p:commandButton>
-                    </p:toolbarGroup>
-                </p:toolbar>
+					<p:commandButton id="btnEdit" value="Edit" ajax="false"
+						icon="pi pi-pencil" styleClass="ui-button-warning mr-2"
+						action="#{admParameterCategoryMB.onEdit(admParameterCategoryMB.bean)}"
+						title="Edit parameter category" />
 
-                <p:dataTable id="tabela" widgetVar="widgetTabela" var="item" value="#{admParameterCategoryMB.listaBean}"
-                             reflow="true" styleClass="crud-table" responsiveLayout="scroll"
-                             selection="#{admParameterCategoryMB.selecionadosBean}" rowKey="#{item.id}" paginator="true"
-                             rows="10" rowSelectMode="add" paginatorPosition="both"
-                             rowsPerPageTemplate="10,30,50,100,150,200" 
-                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             currentPageReportTemplate="Mostrando {startRecord} até {endRecord} de {totalRecords} entradas"                             
-                             rowHover="true">
-                    <f:facet name="header">
-                        <div class="crud-table-header">
-                            <span style="font-weight: bold">Categorias </span>
+					<p:commandButton id="btnDelete" value="Delete"
+						icon="pi pi-trash" styleClass="ui-button-danger mr-2"
+						action="#{admParameterCategoryMB.prepareToDelete(admParameterCategoryMB.bean)}"
+						title="Delete parameter category" update="@form" />
+				
+					<p:commandButton value="Return" immediate="true" ajax="false"
+						icon="pi pi-times" styleClass="ui-button-secondary" 
+						id="btnReturn" action="#{admParameterCategoryMB.cancel()}"
+						title="Return" />   
+                </p:toolbarGroup>
+            </p:toolbar>
 
-                            <span class="filter-container ui-input-icon-left">
-                                <i class="pi pi-search"></i>
-                                <p:inputText id="globalFilter" onkeyup="PF('widgetTabela').filter()" placeholder="Pesquisar"/>
-                            </span>
+			<p:confirmDialog message="#{messages['texto_confirmacao_exclusao']}"
+				header="#{messages['titulo_confirmacao']}" severity="alert"
+				widgetVar="confirmation">
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmation').hide()"
+					styleClass="btn btn-success disableSubmit"
+					action="#{admParameterCategoryMB.delete(admParameterCategoryMB.bean)}" />
+				<p:spacer width="10" height="10" />
+				<p:commandButton value="Não" onclick="PF('confirmation').hide()"
+					styleClass="btn btn-danger disableSubmit" type="button" />
+			</p:confirmDialog>
 
-                        </div>
-                    </f:facet>
-                    
-                    <f:facet name="footer">
-	                    <div class="p-d-flex p-ai-center p-jc-between">
-	                        No total existem #{admParameterCategoryMB.listaBean.size()} categorias de parâmetros.
-	                    </div>                    
-                    </f:facet>
+			<p:dataTable var="item" rowKey="#{item.id}" id="table" reflow="true" styleClass="crud-table"
+				selection="#{admParameterCategoryMB.bean}" selectionMode="single"
+				value="#{admParameterCategoryMB.listBean}" rows="10" paginator="true"  
+				rowsPerPageTemplate="#{applicationConfig.dtLinesPerPageTemplate}"
+				paginatorPosition="#{applicationConfig.dtPagerPosition}"					
+				paginatorTemplate="#{applicationConfig.dtPagerModel}"
+				currentPageReportTemplate="#{applicationConfig.dtPagerReportModel}"                
+				emptyMessage="#{messages['main.none.register']}">
 
-                    <p:ajax event="rowSelect" update=":form:btnDelete"/>
-                    <p:ajax event="rowUnselect" update=":form:btnDelete"/>
-                    <p:ajax event="rowSelectCheckbox" update=":form:btnDelete"/>
-                    <p:ajax event="rowUnselectCheckbox" update=":form:btnDelete"/>
-                    <p:ajax event="toggleSelect" update=":form:btnDelete"/>
+				<f:facet name="{Exporters}">
+					<h:commandLink style="float: left;">
+						<p:graphicImage value="/resources/img/excel.png" width="24" />
+						<p:dataExporter type="xls" encoding="iso-8859-1" target="table"
+							options="#{exporterUtil.excelOpt}"
+							fileName="admParameterCategorys" />
+					</h:commandLink>
 
-                    <p:column selectionMode="multiple" exportable="false"></p:column>
+					<h:commandLink style="float: left;">
+						<p:graphicImage value="/resources/img/pdf.png" width="24" />
+						<p:dataExporter type="pdf" encoding="iso-8859-1" target="table"
+							options="#{exporterUtil.pdfOpt}"
+							preProcessor="#{admParameterCategoryMB.preProcessPDF}"
+							fileName="admParameterCategorys" />
+					</h:commandLink>
+				</f:facet>
 
-                    <p:column headerText="Id" sortBy="#{item.id}" filterBy="#{item.id}" style="width:14%; min-width:10rem;">
-                        <h:outputText value="#{item.id}"/>
-                    </p:column>
-                    <p:column headerText="Descrição" sortBy="#{item.description}" filterBy="#{item.description}" style="min-width:10rem;">
-                        <h:outputText value="#{item.description}"/>
-                    </p:column>
-                    <p:column headerText="Ordem" sortBy="#{item.order}" style="width:14%; min-width:8rem;">
-                        <h:outputText value="#{item.order}" />
-                    </p:column>
-                    <p:column exportable="false">
-                        <p:commandButton icon="pi pi-pencil" update=":form:conteudoEditDialog"
-                                         oncomplete="PF('editDialog').show()"
-                                         styleClass="edit-button rounded-button ui-button-success" process="@this">
-                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.bean}"/>
-                            <p:resetInput target=":form:conteudoEditDialog"/>
-                        </p:commandButton>
-                        <p:commandButton class="ui-button-warning rounded-button" icon="pi pi-trash" process="@this"
-                                         oncomplete="PF('excluirDialog').show()">
-                            <f:setPropertyActionListener value="#{item}" target="#{admParameterCategoryMB.bean}"/>
-                        </p:commandButton>
-                    </p:column>
-
-                </p:dataTable>
-
-                <p:dialog header="Detalhes da Categoria do parâmetro" showEffect="fade" modal="true"
-                          widgetVar="editDialog" responsive="true" position="center">
-                    <p:outputPanel id="conteudoEditDialog" class="ui-fluid">
-                        <p:outputPanel rendered="#{not empty admParameterCategoryMB.bean}">
-                            <div class="field">
-                                <p:outputLabel for="description">Descrição</p:outputLabel>
-                                <p:inputTextarea id="description" value="#{admParameterCategoryMB.bean.description}"
-									required="true" />
-                            </div>
-                            <div class="field">
-                                <p:outputLabel for="order">Ordem</p:outputLabel>
-                                <p:inputNumber id="order" value="#{admParameterCategoryMB.bean.order}"/>
-                            </div>
-                        </p:outputPanel>
-                    </p:outputPanel>
-
-                    <f:facet name="footer">
-                        <p:commandButton value="Salvar" icon="pi pi-check" actionListener="#{admParameterCategoryMB.salvar}"
-                                         update="conteudoEditDialog" process="conteudoEditDialog @this"/>
-                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('editDialog').hide()"
-                                         class="ui-button-secondary"/>
-                    </f:facet>
-                </p:dialog>
-
-                <p:confirmDialog widgetVar="excluirDialog" showEffect="fade" width="300"
-                                 message="Deseja excluir?" header="Confirma" severity="warn">
-                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{admParameterCategoryMB.excluir}"
-                                     process="@this" oncomplete="PF('excluirDialog').hide()"/>
-                    <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
-                                     onclick="PF('excluirDialog').hide()"/>
-                </p:confirmDialog>
-
-                <p:confirmDialog global="true" showEffect="fade" width="300">
-                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
-                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
-                                     icon="pi pi-times"/>
-                </p:confirmDialog>
-            </div>
-        </h:form>
-
-    </ui:define>
-
+				<p:column headerText="Description" sortBy="#{item.description}"
+					filterBy="#{item.description}" filterMatchMode="contains">
+					<h:outputText value="#{item.description}" />
+				</p:column>
+			</p:dataTable>
+		</div>
+		</h:form>
+		<br></br>
+		<br></br>
+		<br></br>
+	</ui:define>
 </ui:composition>

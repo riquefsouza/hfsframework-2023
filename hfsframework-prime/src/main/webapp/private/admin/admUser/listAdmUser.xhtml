@@ -6,49 +6,49 @@
                 template="/template/template.xhtml">
 
     <ui:define name="implementation">
-		<h:form id="listAdmPage">
+		<h:form id="listAdmUser">
 		<div class="card crud-demo">
-			<p:panel id="panelBasic" header="Manage Page" styleClass="mb-2">
+			<p:panel id="panelBasic" header="Usuários" styleClass="mb-2">
 				<div class="ui-fluid formgrid grid">
-				    <div class="field col-4 md-4">											
-						<p:outputLabel for="cmbTypeReport" value="Choose the type of report:" />													
-					    <p:selectOneMenu id="cmbTypeReport" value="#{admPageRelMB.typeReport}">
-					    	<f:selectItems value="#{admPageRelMB.listTypeReport}" />			    	  	
-						</p:selectOneMenu>											
-					</div>										
-					<div class="field col-4 md-4">
-						<p:outputLabel for="forceDownload" value="Force Download:" />
-						<p:spacer width="10" height="10" />	
-						<p:selectBooleanCheckbox id="forceDownload" value="#{admPageRelMB.forceDownload}" />
+				    <div class="field col-4 md-4">
+						<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
+						<p:selectOneMenu id="cmbTypeReport" value="#{admUserRelMB.typeReport}">
+							<f:selectItems value="#{admUserRelMB.listTypeReport}" />
+						</p:selectOneMenu>    
 					</div>
-				</div>									
+				    <div class="field col-4 md-4">
+						<p:outputLabel for="forceDownload" value="Forçar download:" />
+						<p:spacer width="10" height="10" />	
+						<p:selectBooleanCheckbox id="forceDownload" value="#{admUserRelMB.forceDownload}" />    
+					</div>
+				</div>					
 			</p:panel>
 
             <p:toolbar>
                 <p:toolbarGroup align="right">                                       
    					<p:commandButton value="Export" title="Export" onclick="form.target='_blank'"
    					 	icon="pi pi-upload" styleClass="ui-button-help mr-2"
-   						id="btnExport" action="#{admPageRelMB.export()}"
+   						id="btnExport" action="#{admUserRelMB.export()}"
 						ajax="false" />
 				
 					<p:commandButton id="btnInsert" value="Insert"
 					 	icon="pi pi-plus" styleClass="ui-button-success mr-2"						
-						action="#{admPageMB.onInsert()}"
-						title="Insert a new page" />
+						action="#{admUserMB.onInsert()}"
+						title="Insert a new user" />
 
 					<p:commandButton id="btnEdit" value="Edit" ajax="false"
 						icon="pi pi-pencil" styleClass="ui-button-warning mr-2"
-						action="#{admPageMB.onEdit(admPageMB.bean)}"
-						title="Edit page" />
+						action="#{admUserMB.onEdit(admUserMB.bean)}"
+						title="Edit user" />
 
 					<p:commandButton id="btnDelete" value="Delete"
 						icon="pi pi-trash" styleClass="ui-button-danger mr-2"
-						action="#{admPageMB.prepareToDelete(admPageMB.bean)}"
-						title="Delete page" update="@form" />
+						action="#{admUserMB.prepareToDelete(admUserMB.bean)}"
+						title="Delete user" update="@form" />
 				
 					<p:commandButton value="Return" immediate="true" ajax="false"
 						icon="pi pi-times" styleClass="ui-button-secondary" 
-						id="btnReturn" action="#{admPageMB.cancel()}"
+						id="btnReturn" action="#{admUserMB.cancel()}"
 						title="Return" />   
                 </p:toolbarGroup>
             </p:toolbar>
@@ -58,16 +58,16 @@
 				widgetVar="confirmation">
 				<p:commandButton value="Sim" update="@form"
 					oncomplete="PF('confirmation').hide()"
-					styleClass="btn btn-success"
-					action="#{admPageMB.delete(admPageMB.bean)}" />
+					styleClass="btn btn-success disableSubmit"
+					action="#{admUserMB.delete(admUserMB.bean)}" />
 				<p:spacer width="10" height="10" />
 				<p:commandButton value="Não" onclick="PF('confirmation').hide()"
-					styleClass="btn btn-danger" type="button" />
+					styleClass="btn btn-danger disableSubmit" type="button" />
 			</p:confirmDialog>
 
 			<p:dataTable var="item" rowKey="#{item.id}" id="table" reflow="true" styleClass="crud-table"
-				selection="#{admPageMB.bean}" selectionMode="single"
-				value="#{admPageMB.listBean}" rows="10" paginator="true"  
+				selection="#{admUserMB.bean}" selectionMode="single"
+				value="#{admUserMB.listBean}" rows="10" paginator="true"  
 				rowsPerPageTemplate="#{applicationConfig.dtLinesPerPageTemplate}"
 				paginatorPosition="#{applicationConfig.dtPagerPosition}"					
 				paginatorTemplate="#{applicationConfig.dtPagerModel}"
@@ -78,32 +78,30 @@
 					<h:commandLink style="float: left;">
 						<p:graphicImage value="/resources/img/excel.png" width="24" />
 						<p:dataExporter type="xls" encoding="iso-8859-1" target="table" options="#{exporterUtil.excelOpt}" 
-							 fileName="admPages" />
+							 fileName="admUsers" />
 					</h:commandLink>
 
 					<h:commandLink style="float: left;">
 						<p:graphicImage value="/resources/img/pdf.png" width="24" />
 						<p:dataExporter type="pdf" encoding="iso-8859-1" target="table" options="#{exporterUtil.pdfOpt}" 
-							preProcessor="#{admPageMB.preProcessPDF}" fileName="admPages" />
+							preProcessor="#{admUserMB.preProcessPDF}" 
+							fileName="admUsers" />
 					</h:commandLink>	
 				</f:facet>
 
-				<p:column headerText="Page" sortBy="#{item.url}"
-					filterBy="#{item.url}"
-					filterMatchMode="contains">
-					<h:outputText value="#{item.url}" />
+				<p:column headerText="Login" sortBy="#{item.login}" style="width:15%; min-width:15rem;"
+					filterBy="#{item.login}" filterMatchMode="contains">
+					<h:outputText value="#{item.login}" />
 				</p:column>
-				<p:column headerText="Description" sortBy="#{item.description}"
-					filterBy="#{item.description}" filterMatchMode="contains">
-					<h:outputText value="#{item.description}" />
-				</p:column>										
-				<p:column headerText="Page Profile(s)"
-					sortBy="#{item.profilesPage}" 
-					filterBy="#{item.profilesPage}"
-					filterMatchMode="contains">
-					<h:outputText value="#{item.profilesPage}" />
+				<p:column headerText="Name" sortBy="#{item.name}"
+					filterBy="#{item.name}" filterMatchMode="contains">
+					<h:outputText value="#{item.name}" />
+				</p:column>					
+				<p:column headerText="E-mail" sortBy="#{item.email}"
+					filterBy="#{item.email}" filterMatchMode="contains">
+					<h:outputText value="#{item.email}" />
 				</p:column>
-				
+									
 			</p:dataTable>
 		</div>
 		</h:form>

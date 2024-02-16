@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+<ui:define name="implementation">
+	<h:form id="editAdmPage">
+		<div class="card crud-demo">
+			<p:panel id="panelBasic" header="Manage Page"
+				style="margin-bottom:5px">
+	
+	            <p:toolbar>
+	                <p:toolbarGroup align="right">                                       
+						<p:commandButton id="btnSave" value="Save" ajax="false"
+							icon="pi pi-check" styleClass="ui-button-success mr-2"
+							action="#{admPageMB.save}"
+							title="Save a page" />
+						
+						<p:commandButton value="Clean" id="btnClean"
+							icon="pi pi-star-o" styleClass="ui-button-primary mr-2"
+							type="reset" title="Clean Fields" />							
+					
+						<p:commandButton value="Cancel" immediate="true" ajax="false" 
+							icon="pi pi-times" styleClass="ui-button-secondary" 						 
+							action="#{admPageMB.cancelEdition}" 
+							id="btnCancel" title="Cancel" />    
+	                </p:toolbarGroup>
+	            </p:toolbar>
+			
+				<p:outputPanel class="card ui-fluid">
+					<div class="field">
+						<p:outputLabel for="page" value="Page" />
+						<p:inputText id="page" label="Page" required="true"
+							style="width: 100%"
+							value="#{admPageMB.bean.url}" maxlength="255">
+						</p:inputText>
+					</div>
+					<div class="field">					
+						<p:outputLabel for="description" value="Description:" />
+						<p:inputText id="description" label="Description" required="true"
+							style="width: 100%"
+							value="#{admPageMB.bean.description}" maxlength="255">
+						</p:inputText>
+					</div>
+					<div class="field">					
+						<p:outputLabel for="pickListProfile" value="Page Profile(s):" />
+						<p:pickList id="pickListProfile" responsive="true"
+							value="#{admPageMB.dualListAdmProfile}"
+							converter="admProfileConverter" var="item"
+							itemLabel="#{item.description}" itemValue="#{item}"
+							showSourceFilter="true" showTargetFilter="true"
+							filterMatchMode="contains">
+							<f:facet name="sourceCaption">Available</f:facet>
+							<f:facet name="targetCaption">Authorized</f:facet>
+						</p:pickList>
+					</div>
+				</p:outputPanel>
+
+			</p:panel>
+		</div>				
+		</h:form>
+	</ui:define>
+</ui:composition>

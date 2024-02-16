@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+<ui:define name="implementation">
+	<h:form id="editAdmProfile">
+		<div class="card crud-demo">	
+			<p:panel id="panelBasic" header="Manage Page"
+				style="margin-bottom:5px">
+	
+	            <p:toolbar>
+	                <p:toolbarGroup align="right">                                       
+						<p:commandButton id="btnSave" value="Save" ajax="false"
+							icon="pi pi-check" styleClass="ui-button-success mr-2"
+							action="#{admProfileMB.save()}"
+							title="Save a profile" />
+						
+						<p:commandButton value="Clean" id="btnClean"
+							icon="pi pi-star-o" styleClass="ui-button-primary mr-2"
+							type="reset" title="Clean Fields" />							
+					
+						<p:commandButton value="Cancel" immediate="true" ajax="false" 
+							icon="pi pi-times" styleClass="ui-button-secondary" 						 
+							action="#{admProfileMB.cancelEdition()}" 
+							id="btnCancel" title="Cancel" />    
+	                </p:toolbarGroup>
+	            </p:toolbar>
+			
+				<p:outputPanel class="card ui-fluid">
+					<div class="field">
+						<p:outputLabel for="description" value="Description:" />
+						<p:inputText id="description" label="Description" required="true"
+						style="width: 100%"
+							value="#{admProfileMB.bean.description}" maxlength="80">
+						</p:inputText>
+					</div>
+					<div class="field">
+						<p:outputLabel for="geral" value="All Users: " />
+						<p:spacer width="10" height="10" />	
+						<p:selectBooleanCheckbox id="geral"
+							value="#{admProfileMB.bean.general}" />
+
+						<p:spacer width="30" height="10" />	
+
+						<p:outputLabel for="admin" value="System Administrators: " />
+						<p:spacer width="10" height="10" />	
+						<p:selectBooleanCheckbox id="admin"
+							value="#{admProfileMB.bean.administrator}" />
+					</div>
+							
+					<p:tabView>
+						<p:tab title="Users">
+							<p:outputLabel for="pickListUsers" value="Profile User(s)" />
+							<p:pickList id="pickListUsers" responsive="true"
+								value="#{admProfileMB.dualListAdmUser}"
+								converter="admUserConverter" var="item"
+								itemLabel="#{item.name}" itemValue="#{item}"
+								showSourceFilter="true" showTargetFilter="true"
+								filterMatchMode="contains">
+								<f:facet name="sourceCaption">Available</f:facet>
+								<f:facet name="targetCaption">Associated with Profile</f:facet>												
+							</p:pickList>
+						</p:tab>
+						<p:tab title="Pages">
+							<p:outputLabel for="pickListPage" value="Profile Page(s):" />
+							<p:pickList id="pickListPage" responsive="true"
+								value="#{admProfileMB.dualListAdmPage}"
+								converter="admPageConverter" var="item"
+								itemLabel="#{item.url}" itemValue="#{item}"
+								showSourceFilter="true" showTargetFilter="true"									
+								filterMatchMode="contains">
+								<f:facet name="sourceCaption">Available</f:facet>
+								<f:facet name="targetCaption">Authorized</f:facet>										
+							</p:pickList>							
+						</p:tab>
+					</p:tabView>
+				</p:outputPanel>
+				
+			</p:panel>
+		</div>
+		</h:form>
+		<br></br>
+		<br></br>
+		<br></br>		
+	</ui:define>
+</ui:composition>

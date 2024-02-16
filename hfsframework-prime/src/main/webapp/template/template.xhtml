@@ -22,21 +22,20 @@
 
 <h:body>
     <f:view locale="#{app.locale}">
-
-		<p:outputPanel id="alert-messages">
-			<p:messages id="messages"
-				styleClass="alert-messages skipModalLoading" escape="false"
-				closable="true" showDetail="true"
-				showSummary="false" infoClass="alert alert-info skipModalLoading"
-				successClass="alert alert-success skipModalLoading"
-				errorClass="alert alert-danger skipModalLoading"
-				warnClass="alert alert-warning skipModalLoading" >
-				<p:autoUpdate />
-			</p:messages>
-		</p:outputPanel>
-
     
 	    <c:if test="#{not identity.loggedIn}">
+
+			<p:outputPanel id="alert-messages">
+				<p:messages id="messages"
+					styleClass="alert-messages skipModalLoading" escape="false"
+					closable="true" showDetail="true"
+					showSummary="false" infoClass="alert alert-info skipModalLoading"
+					successClass="alert alert-success skipModalLoading"
+					errorClass="alert alert-danger skipModalLoading"
+					warnClass="alert alert-warning skipModalLoading" >
+					<p:autoUpdate />
+				</p:messages>
+			</p:outputPanel>
 
 			<div id="conteudo-principal" class="container-fluid">
 				<div>
@@ -67,6 +66,19 @@
 	                        </div>
 	                    </div>
 	                 -->    
+	                 
+						<p:outputPanel id="alert-messages">
+							<p:messages id="messages"
+								styleClass="alert-messages skipModalLoading" escape="false"
+								closable="true" showDetail="true"
+								showSummary="false" infoClass="alert alert-info skipModalLoading"
+								successClass="alert alert-success skipModalLoading"
+								errorClass="alert alert-danger skipModalLoading"
+								warnClass="alert alert-warning skipModalLoading" >
+								<p:autoUpdate />
+							</p:messages>
+						</p:outputPanel>
+	                 
 	                    <div class="content-section implementation">
 	                        <ui:insert name="implementation"></ui:insert>
 	                    </div>

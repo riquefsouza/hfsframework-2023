@@ -1,133 +1,67 @@
+/**
+ * <p><b>HFS Framework</b></p>
+ * @author Henrique Figueiredo de Souza
+ * @version 1.0
+ * @since 2019
+ */
 package br.com.hfs.admin.view.admParameter;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
-import org.primefaces.PrimeFaces;
+import jakarta.annotation.PostConstruct;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
 
 import br.com.hfs.admin.model.AdmParameter;
 import br.com.hfs.admin.model.AdmParameterCategory;
 import br.com.hfs.admin.service.AdmParameterCategoryService;
 import br.com.hfs.admin.service.AdmParameterService;
+import br.com.hfs.base.BaseViewRegister;
+import br.com.hfs.base.IBaseViewRegister;
 import br.com.hfs.util.interceptors.HandlingExpectedErrors;
-import jakarta.annotation.PostConstruct;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 
 @Named
 @ViewScoped
 @HandlingExpectedErrors
-public class AdmParameterMB implements Serializable {
+public class AdmParameterMB extends
+BaseViewRegister<AdmParameter, Long, AdmParameterService>
+		implements IBaseViewRegister<AdmParameter> {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-
-	@Inject
-	private AdmParameterService service;
-	
-	private List<AdmParameter> listaBean;
-	
-	private AdmParameter bean;
-	
-	private List<AdmParameter> selecionadosBean;
 
 	@Inject
 	private AdmParameterCategoryService admParameterCategoryService;
 
 	private List<AdmParameterCategory> listAdmParameterCategory;
 
+	/**
+	 * Instantiates a new adm parametro MB.
+	 */
+	public AdmParameterMB() {
+		super(AdmParameter.class, 
+				"admin/admParameter/listAdmParameter", 
+				"admin/admParameter/editAdmParameter");
+
+		listAdmParameterCategory = new ArrayList<AdmParameterCategory>();
+	}
+
 	@PostConstruct
 	public void init() {
-		this.listaBean = this.service.findAll();
-		this.selecionadosBean = new ArrayList<>();
 		listAdmParameterCategory = admParameterCategoryService.findAll();
+		updateDataTableList();
+		beanInSession();
 	}
 
-	public List<AdmParameter> getListaBean() {
-		return listaBean;
-	}
-
-	public AdmParameter getBean() {
-		return bean;
-	}
-
-	public void setBean(AdmParameter bean) {
-		this.bean = bean;
-	}
-
-	public List<AdmParameter> getSelecionadosBean() {
-		return selecionadosBean;
-	}
-
-	public void setSelecionadosBean(List<AdmParameter> selecionadosBean) {
-		this.selecionadosBean = selecionadosBean;
-	}
-
-	public void adicionar() {
-		this.bean = new AdmParameter();
-		setAdmParameterCategory(this.bean);
-	}
-	
-	public void salvar() {
-		this.bean.setIdAdmParameterCategory(this.bean.getAdmParameterCategory().getId());
-		
-		if (this.bean.getId() == null) {
-			this.listaBean.add(this.service.insert(this.bean));
-			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Adicionado"));
-		} else {
-			OptionalInt indice = IntStream
-		      .range(0, listaBean.size())
-		      .filter(i -> listaBean.get(i).getId().equals(this.bean.getId()))
-		      //.mapToObj(i -> listaBean.get(i))
-		      .findFirst();
-			
-			if (!indice.isEmpty()) {
-				AdmParameter obj = listaBean.get(indice.getAsInt());
-				this.listaBean.set(indice.getAsInt(), this.service.update(obj));			
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Atualizado"));				
-			}
-		}
-
-		PrimeFaces.current().executeScript("PF('editDialog').hide()");
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
-	}
-
-	public void excluir() {
-		this.service.delete(this.bean);
-		this.listaBean.remove(this.bean);
-		this.bean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetro Excluído"));
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
-	}
-
-	public String getDeleteButtonMessage() {
-		if (hasSelecionadosBean()) {
-			int size = this.selecionadosBean.size();
-			return size > 1 ? size + " Parâmetros selecionados" : "1 Parâmetro selecionado";
-		}
-
-		return "Excluir";
-	}
-
-	public boolean hasSelecionadosBean() {
-		return this.selecionadosBean != null && !this.selecionadosBean.isEmpty();
-	}
-
-	public void deleteSelecionadosBean() {
-		this.service.delete(this.selecionadosBean);
-		this.listaBean.removeAll(this.selecionadosBean);
-		this.selecionadosBean = null;
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Parâmetros Excluídos"));
-		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
-		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
-	}
-
+	/**
+	 * Select adm parametro categoria.
+	 */
 	public void selectAdmParameterCategory(AdmParameter bean) {
 		AdmParameterCategory admParametroCategoria = admParameterCategoryService
 				.findById(bean.getAdmParameterCategory().getId()).get();
@@ -140,7 +74,73 @@ public class AdmParameterMB implements Serializable {
 			selectAdmParameterCategory(bean);
 		}		
 	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#onIncluir()
+	 */
+	@Override
+	public String onInsert() {
+		AdmParameter obj = new AdmParameter();
+		setAdmParameterCategory(obj);
+		return super.onInsert(obj);
+	}
 	
+	@Override
+	public String onEdit(AdmParameter entity) {
+		return super.onEdit(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#salvar()
+	 */
+	@Override
+	public String save() {
+		getBean().setIdAdmParameterCategory(getBean().getAdmParameterCategory().getId());
+		return super.save(getBean().getId(), getBean().getDescription());
+	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.BaseViewCadastro#excluir(java.lang.Object)
+	 */
+	@Override
+	public void delete(AdmParameter entity) {
+		super.delete(entity);
+	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#preProcessPDF(java.lang.Object)
+	 */
+	@Override
+	public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
+		super.preProcessPDF(document, "AdmParameter");
+	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#getBean()
+	 */
+	@Override
+	public AdmParameter getBean() {
+		return super.getEntity();
+	}
+
+	/* (non-Javadoc)
+	 * @see br.jus.trt1.hfsframework.base.IBaseViewCadastro#setBean(java.lang.Object)
+	 */
+	@Override
+	public void setBean(AdmParameter entity) {
+		super.setEntity(entity);
+	}
+
+	@Override
+	public List<AdmParameter> getListBean() {
+		return super.getListEntity();
+	}
+
+	@Override
+	public void setListBean(List<AdmParameter> listEntity) {
+		super.setListEntity(listEntity);
+	}
+
 	public List<AdmParameterCategory> getListAdmParameterCategory() {
 		return listAdmParameterCategory;
 	}
@@ -148,5 +148,5 @@ public class AdmParameterMB implements Serializable {
 	public void setListaAdmParameterCategory(List<AdmParameterCategory> listAdmParameterCategory) {
 		this.listAdmParameterCategory = listAdmParameterCategory;
 	}
-	
+
 }

@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="implementation">
+        <h:form id="formFuncionario">
+        	<p:growl id="messages" showDetail="true"/>
+        
+            <p:outputPanel class="card crud-demo" rendered="#{not funcionarioView.modoEditar}">
+                <p:toolbar>
+                    <p:toolbarGroup>                                        
+                        <p:commandButton value="Adicionar" icon="pi pi-plus" actionListener="#{funcionarioView.adicionar}"
+                                         update="@form" 
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                        </p:commandButton>
+                        <p:commandButton id="btnDelete" value="#{funcionarioView.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{funcionarioView.deleteSelecionadosBean}"
+                                         styleClass="ui-button-danger" disabled="#{!funcionarioView.hasSelecionadosBean()}"
+                                         update="@this">
+                                <p:confirm header="Confirmation" message="Excluir o funcionário selecionado?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">						
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable id="tabela" widgetVar="widgetTabela" var="item" value="#{funcionarioView.lazyModel}"
+                             styleClass="crud-table" lazy="true"
+                             selection="#{funcionarioView.selecionadosBean}" rowKey="#{item.id}" paginator="true"
+                             rows="10" paginatorPosition="both"
+                             rowsPerPageTemplate="10,30,50,100,150,200" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="Mostrando {startRecord} até {endRecord} de {totalRecords} entradas">
+                             
+                    <f:facet name="header">
+                        <div class="crud-table-header">
+                            <span style="font-weight: bold">Funcionários </span>
+
+                            <span class="filter-container ui-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('widgetTabela').filter()" placeholder="Pesquisar"/>
+                            </span>
+
+                        </div>
+                    </f:facet>
+                    
+                    <f:facet name="footer">
+	                    <div class="p-d-flex p-ai-center p-jc-between">
+	                        No total existem #{funcionarioView.lazyModel.getRowCount()} funcionários.
+	                    </div>                    
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":formFuncionario:btnDelete"/>
+                    <p:ajax event="rowUnselect" update=":formFuncionario:btnDelete"/>
+                    <p:ajax event="rowSelectCheckbox" update=":formFuncionario:btnDelete"/>
+                    <p:ajax event="rowUnselectCheckbox" update=":formFuncionario:btnDelete"/>
+                    <p:ajax event="toggleSelect" update=":formFuncionario:btnDelete"/>
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Id" sortBy="#{item.id}" filterBy="#{item.id}" style="width:5%; min-width:5rem;">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>                    
+					<p:column headerText="Nome" sortBy="#{item.nome}" filterBy="#{item.nome}" filterMatchMode="contains" style="width:20%; min-width:20rem;">
+						<h:outputText value="#{item.nome}" />
+					</p:column>                    
+					<p:column headerText="Cpf" sortBy="#{item.cpfFormatado}" filterBy="#{item.cpfFormatado}" filterMatchMode="contains" style="width:10%; min-width:10rem;">
+						<h:outputText value="#{item.cpfFormatado}" />
+					</p:column>                    
+					<p:column headerText="Email" sortBy="#{item.email}" filterBy="#{item.email}" filterMatchMode="contains" style="width:10%; min-width:10rem;">
+						<h:outputText value="#{item.email}" />
+					</p:column>                    
+					<p:column headerText="Telefone" sortBy="#{item.telefone}" filterBy="#{item.telefone}" filterMatchMode="contains" style="width:14%; min-width:10rem;">
+						<h:outputText value="#{item.telefone}" />
+					</p:column>                    
+					<p:column headerText="Celular" sortBy="#{item.celular}" filterBy="#{item.celular}" filterMatchMode="contains" style="width:14%; min-width:10rem;">
+						<h:outputText value="#{item.celular}" />
+					</p:column>                    
+					<p:column headerText="Setor" sortBy="#{item.setor}" filterBy="#{item.setor}" filterMatchMode="contains" style="width:14%; min-width:10rem;">
+						<h:outputText value="#{item.setor}" />
+					</p:column>                    
+					<p:column headerText="CodCargo" sortBy="#{item.codCargo}" filterBy="#{item.codCargo}" filterMatchMode="contains" style="width:14%; min-width:10rem;">
+						<h:outputText value="#{item.codCargo}" />
+					</p:column>                    
+					<p:column headerText="Cargo" sortBy="#{item.cargo}" filterBy="#{item.cargo}" filterMatchMode="contains" style="width:20%; min-width:20rem;">
+						<h:outputText value="#{item.cargo}" />
+					</p:column>                    
+					<p:column headerText="Data Admissão" sortBy="#{item.dataAdmissaoFormatada}" filterBy="#{item.dataAdmissaoFormatada}" filterMatchMode="contains" style="width:15%; min-width:12rem;">
+						<h:outputText value="#{item.dataAdmissaoFormatada}" />
+					</p:column>                    
+					<p:column headerText="Data Saída" sortBy="#{item.dataSaidaFormatada}" filterBy="#{item.dataSaidaFormatada}" filterMatchMode="contains" style="width:15%; min-width:12rem;">
+						<h:outputText value="#{item.dataSaidaFormatada}" />
+					</p:column>                    
+					<p:column headerText="Ativo" sortBy="#{item.ativo}" filterBy="#{item.ativo}" filterMatchMode="contains" style="width:14%; min-width:10rem;">
+						<h:outputText value="#{item.ativo}" />
+					</p:column>                    
+                    <p:column exportable="false" style="width: 25px;">
+			        	<p:menuButton icon="pi pi-ellipsis-v" buttonStyleClass="ui-button-flat ui-button-plain" buttonStyle="border-style: none;">
+				            <p:menuitem value="Editar" icon="pi pi-pencil" update="@form" actionListener="#{funcionarioView.editar(item)}" /> 
+				            <p:menuitem value="Excluir" icon="pi pi-trash" update="@form" actionListener="#{funcionarioView.chamarDialogExcluir(item)}" />
+		    		    </p:menuButton>                    	
+                    </p:column>
+                        
+                </p:dataTable>
+                
+		         <p:confirmDialog widgetVar="excluirDialog" showEffect="fade" width="300"
+		                          message="Deseja excluir?" header="Confirma" severity="warn">
+		             <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{funcionarioView.excluir}"
+		                              update="@form" oncomplete="PF('excluirDialog').hide()"/>
+		             <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+		                              onclick="PF('excluirDialog').hide()"/>
+		         </p:confirmDialog>
+		
+		         <p:confirmDialog global="true" showEffect="fade" width="300">
+		             <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+		             <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+		                              icon="pi pi-times"/>
+		         </p:confirmDialog>
+                
+            </p:outputPanel>
+        
+        	<p:outputPanel rendered="#{funcionarioView.modoEditar}">
+				<p:panel header="Detalhes do funcionário">
+	                <p:toolbar>
+	                    <p:toolbarGroup>                                        
+	                    </p:toolbarGroup>
+	                    <p:toolbarGroup align="right">
+	                        <p:commandButton value="Cancelar" icon="pi pi-times" actionListener="#{funcionarioView.cancelarEditar}" 
+	                        				 styleClass="ui-button-secondary mr-2" update="@form" immediate="true" >	                        	
+	                        </p:commandButton>
+	                        <p:commandButton value="Limpar" icon="pi pi-star" actionListener="#{funcionarioView.limpar}" 
+	                        				 styleClass="ui-button-primary mr-2" update=":formFuncionario:conteudoEditDialog" >
+	                        	<p:resetInput target=":formFuncionario:conteudoEditDialog"/>
+	                        </p:commandButton>	                        
+	                        <p:commandButton value="Salvar" icon="pi pi-check" action="#{funcionarioView.salvar}"
+	                                         styleClass="ui-button-success mr-2" update="@form" />	                    						
+	                    </p:toolbarGroup>
+	                </p:toolbar>
+
+                    <p:outputPanel id="conteudoEditDialog" styleClass="card ui-fluid">                        
+						<div class="field">
+							<p:outputLabel for="nome" value="Nome:" />
+							<p:inputText id="nome" value="#{funcionarioView.bean.nome}" label="Nome" required="true" />
+						</div>
+						<div class="field">
+							<p:outputLabel for="email" value="Email:" />
+							<p:inputText id="email" value="#{funcionarioView.bean.email}" label="Email" />
+						</div>
+	                    <div class="formgrid grid">
+	                        <div class="field col">
+								<p:outputLabel for="cpf" value="Cpf:" />
+								<p:inputMask id="cpf" value="#{funcionarioView.bean.cpfFormatado}" mask="999.999.999-99" required="true" />
+							</div>
+							<div class="field col">
+								<p:outputLabel for="telefone" value="Telefone:" />
+								<p:inputText id="telefone" value="#{funcionarioView.bean.telefone}" label="Telefone" />
+							</div>
+						</div>	
+	                    <div class="formgrid grid">
+	                        <div class="field col">
+								<p:outputLabel for="celular" value="Celular:" />
+								<p:inputText id="celular" value="#{funcionarioView.bean.celular}" label="Celular" />
+							</div>
+							<div class="field col">
+								<p:outputLabel for="setor" value="Setor:" />
+								<p:inputText id="setor" value="#{funcionarioView.bean.celular}" label="Setor" />
+							</div>
+						</div>
+						<div class="formgrid grid">
+							<div class="field col">
+								<p:outputLabel for="codCargo">CodCargo</p:outputLabel>
+								<p:inputNumber id="codCargo" value="#{funcionarioView.bean.codCargo}" decimalSeparator="" thousandSeparator="" decimalPlaces="0" />
+							</div>
+							<div class="field col">
+								<p:outputLabel for="cargo" value="Cargo:" />
+								<p:inputText id="cargo" value="#{funcionarioView.bean.cargo}" label="Cargo" />
+							</div>
+						</div>         
+						<div class="formgrid grid">
+							<div class="field col">
+								<p:outputLabel for="dataAdmissao" value="Data Admissão:" />
+								<p:datePicker id="dataAdmissao" value="#{funcionarioView.bean.dataAdmissao}" />							
+							</div>
+							<div class="field col">
+								<p:outputLabel for="dataSaida" value="Data Saída:" />
+								<p:datePicker id="dataSaida" value="#{funcionarioView.bean.dataSaida}" />
+							</div>
+						</div>         
+						<div class="flex align-items-center gap-1">
+							<p:selectBooleanCheckbox value="#{funcionarioView.bean.ativoBooleano}" itemLabel="Ativo"/>
+						</div>
+						                        
+                    </p:outputPanel>
+					
+				</p:panel>
+
+            </p:outputPanel>
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

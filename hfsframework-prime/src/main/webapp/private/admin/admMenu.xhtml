@@ -1,0 +1,131 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="implementation">
+        <h:form id="formAdmMenu">
+            <div class="card crud-demo">
+                <p:growl id="messages" showDetail="true"/>
+
+				<p:panel id="panelBasic" header="Menu"
+					styleClass="p-mb-2">
+					<div class="ui-fluid formgrid grid">
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
+							<br></br>	
+							<p:selectOneMenu id="cmbTypeReport" value="#{admMenuRelMB.typeReport}">
+								<f:selectItems value="#{admMenuRelMB.listTypeReport}" />
+							</p:selectOneMenu>    
+						</div>
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="forceDownload" value="Forçar download:" />
+							<p:spacer width="10" height="10" />	
+							<p:selectBooleanCheckbox id="forceDownload" value="#{admMenuRelMB.forceDownload}" />    
+						</div>
+					</div>					
+				</p:panel>
+
+                <p:toolbar>
+                    <p:toolbarGroup>                                        
+                        <p:commandButton value="Adicionar" icon="pi pi-plus" actionListener="#{admMenuView.onInsert}"
+                                         update=":formAdmMenu:conteudoEditDialog" oncomplete="PF('editDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                        </p:commandButton>
+                        <p:commandButton id="btnEditar" value="Editar" icon="pi pi-pencil" 
+                        				 actionListener="#{admMenuView.onEdit}" 
+                                         update=":formAdmMenu:conteudoEditDialog"
+                                         styleClass="ui-button-warning" style="margin-right: .5rem">
+                        </p:commandButton>
+                        <p:commandButton id="btnExcluir" value="Excluir" icon="pi pi-trash" 
+                        				 actionListener="#{admMenuView.onDelete}"
+                                         styleClass="ui-button-danger" style="margin-right: .5rem">
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Expandir todos" actionListener="#{admMenuView.expandAll}" 
+                        				update="arvoreMenu" styleClass="mr-2" />
+                        <p:commandButton value="Recolher todos" actionListener="#{admMenuView.collapseAll}" 
+                        				update="arvoreMenu" styleClass="mr-2" />
+                    						
+                        <p:commandButton value="Exportar" icon="pi pi-upload" onclick="form.target='_blank'" 
+                        	action="#{admMenuRelMB.export}" id="btnExportar" ajax="false" 
+                        	styleClass="ui-button-help p-mr-2 p-mb-2" style="margin-right: .5rem">
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                
+				<p:tree value="#{admMenuView.menuRaiz}" var="menuItem" id="arvoreMenu" 
+					selectionMode="single"
+					style="width:100%" dynamic="true" cache="false"
+					selection="#{admMenuView.selecionadoMenu}">
+					<p:treeNode>
+						<h:outputText value="#{menuItem.description}" />
+					</p:treeNode>
+				</p:tree>                                                
+                        
+                <p:dialog header="Detalhes do Menu" showEffect="fade" modal="true"
+                          widgetVar="editDialog" responsive="true" position="center" >
+                    <p:outputPanel id="conteudoEditDialog" class="ui-fluid" style="width: 650px">
+                        <p:outputPanel rendered="#{not empty admMenuView.bean}">
+                        	<div class="field">
+								<p:outputLabel for="admPage" value="Página:" />
+								<p:selectOneMenu label="Página" id="admPage"
+									style="width: 100%" converter="admPageConverter"
+									value="#{admMenuView.bean.admPage}"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true"/>
+									<f:selectItems
+										value="#{admMenuView.listaAdmPagina}"
+										var="item" itemValue="#{item}" itemLabel="#{item.description}" />
+								</p:selectOneMenu>
+                        	</div>
+                        	<div class="field">
+								<p:outputLabel for="description" value="Nome do menu:" />
+								<p:inputText id="description" value="#{admMenuView.bean.description}" 
+									style="width: 100%" label="Nome do menu" required="true">
+								</p:inputText>
+                        	</div>                        
+                        	<div class="field">
+								<p:outputLabel for="admMenuParent" value="Menu pai:" />
+								<p:selectOneMenu label="Menu pai" id="admMenuParent"
+								 	style="width: 100%" converter="admMenuConverter"
+									value="#{admMenuView.bean.admMenuParent}"
+									filter="true" filterMatchMode="contains">
+									<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true"/>
+									<f:selectItems
+										value="#{admMenuView.listaAdmMenuParent}"
+										var="item" itemValue="#{item}" itemLabel="#{item.description}" />
+								</p:selectOneMenu>
+                        	</div>
+                            <div class="field">
+                                <p:outputLabel for="order">Ordem</p:outputLabel>
+                                <p:inputNumber id="order" value="#{admMenuView.bean.order}" required="true" />
+                            </div>                        	
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Salvar" icon="pi pi-check" actionListener="#{admMenuView.salvar}"
+                                         update="arvoreMenu" />
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('editDialog').hide()"
+                                         class="ui-button-secondary" immediate="true" />
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="excluirDialog" showEffect="fade" width="300"
+                                 message="Deseja excluir?" header="Confirma" severity="warn">
+                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{admMenuView.excluir}"
+                                     process="@this" oncomplete="PF('excluirDialog').hide()" update="arvoreMenu" />
+                    <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('excluirDialog').hide()"/>
+                </p:confirmDialog>
+
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
