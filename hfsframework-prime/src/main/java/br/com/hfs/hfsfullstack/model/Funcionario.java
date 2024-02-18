@@ -1,6 +1,7 @@
 package br.com.hfs.hfsfullstack.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -235,5 +236,28 @@ public class Funcionario {
     	return DateUtil.Format(dataSaida, DateUtil.DATE_STANDARD);
     }
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(ativo, cargo, celular, codCargo, cpf, dataAdmissao, dataSaida, email, id, nome, setor,
+				telefone);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Funcionario other = (Funcionario) obj;
+		return Objects.equals(ativo, other.ativo) && Objects.equals(cargo, other.cargo)
+				&& Objects.equals(celular, other.celular) && Objects.equals(codCargo, other.codCargo)
+				&& Objects.equals(cpf, other.cpf) && Objects.equals(dataAdmissao, other.dataAdmissao)
+				&& Objects.equals(dataSaida, other.dataSaida) && Objects.equals(email, other.email)
+				&& Objects.equals(id, other.id) && Objects.equals(nome, other.nome)
+				&& Objects.equals(setor, other.setor) && Objects.equals(telefone, other.telefone);
+	}
+	
 }
 

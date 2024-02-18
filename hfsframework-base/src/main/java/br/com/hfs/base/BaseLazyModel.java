@@ -32,7 +32,6 @@ public class BaseLazyModel<T, I extends Serializable, B extends BaseService<T, I
 	private B service;
 
 	public BaseLazyModel(B service) {
-		super();
 		this.datasource = new ArrayList<T>();
 		this.service = service;
 		this.dataSize = service.count().intValue();
@@ -40,30 +39,38 @@ public class BaseLazyModel<T, I extends Serializable, B extends BaseService<T, I
 	}
 
 	public BaseLazyModel(B service, int dataSize) {
-		super();
 		this.datasource = new ArrayList<T>();
 		this.service = service;
 		this.dataSize = dataSize;
 		this.found = false;
 	}
 
-	public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy,
+	public List<T> load(int offset, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy,
 			boolean usarQueryNativa) {
 		List<T> ds;
 
-		if (!usarQueryNativa)
-			ds = service.findAll(first, pageSize);
-		else {
+		if (!usarQueryNativa) {
+			ds = service.findAll(offset, pageSize);			
+		} else {
 			try {
-				ds = service.listByRange(first + 1, first + pageSize);
+				ds = service.listByRange(offset + 1, offset + pageSize);
 			} catch (IndexOutOfBoundsException e) {
-				ds = service.listByRange(first + 1, first + (dataSize % pageSize));
+				ds = service.listByRange(offset + 1, offset + (dataSize % pageSize));
 			}
 		}
-		return load(first, pageSize, sortBy, filterBy, ds);
+		
+		/*
+        ds = datasource.stream()
+                .skip(offset)
+                .filter(o -> filter(FacesContext.getCurrentInstance(), filterBy.values(), o))
+                .limit(pageSize)
+                .collect(Collectors.toList());
+		*/
+		
+		return load(offset, pageSize, sortBy, filterBy, ds);
 	}
 
-	public List<T> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy,
+	public List<T> load(int offset, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy,
 			List<T> ds) {
 		List<T> data = new ArrayList<T>();
 		found = false;

@@ -137,7 +137,7 @@ public abstract class BaseRepository<T, I extends Serializable> implements IBase
 
 	public List<T> findAll(int start, int max) {
 		TypedQuery<T> query = em.createQuery("SELECT x FROM " + clazz.getName() + " x", clazz);
-		if (start > 0) {
+		if (start >= 0) {
 			query.setFirstResult(start);
 		}
 		if (max > 0) {
@@ -153,7 +153,7 @@ public abstract class BaseRepository<T, I extends Serializable> implements IBase
 	@SuppressWarnings("unchecked")
 	protected List<T> findPaginated(String tableName, String pkName, int pageNumber, int pageSize) {
 		String sql = "select * from (select tabela.*, " + pkName + " linha from (select * from " + tableName + " order by " + pkName + ") tabela "
-				+ "where " + pkName + " < ((?1 * ?2) + 1 )) where linha >= (((?1-1) * ?2) + 1)";
+				+ "where " + pkName + " < ((?1 * ?2) + 1 )) dados where linha >= (((?1-1) * ?2) + 1)";
 
 		Query q = em.createNativeQuery(sql, clazz);
 		q.setParameter(1, pageNumber);
@@ -165,7 +165,7 @@ public abstract class BaseRepository<T, I extends Serializable> implements IBase
 	@SuppressWarnings("unchecked")
 	protected List<T> listByRange(String tableName, String pkName, int startInterval, int endInterval) {
 		String sql = "select * from (select tabela.*, " + pkName + " linha from (select * from " + tableName + " order by " + pkName + ") tabela "
-				+ "where " + pkName + " <= ?2) where linha >= ?1";
+				+ "where " + pkName + " <= ?2) dados where linha >= ?1";
 		
 		Query q = em.createNativeQuery(sql, clazz);
 		q.setParameter(1, startInterval);

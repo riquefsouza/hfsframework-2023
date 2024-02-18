@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.LazyDataModel;
 
 import br.com.hfs.hfsfullstack.model.Funcionario;
 import br.com.hfs.hfsfullstack.service.FuncionarioService;
@@ -32,7 +33,7 @@ public class FuncionarioView implements Serializable {
 	
 	private List<Funcionario> selecionadosBean;
 
-	private FuncionarioLazyDataModel lazyModel;
+	private LazyDataModel<Funcionario> lazyModel;
 	
 	@PostConstruct
 	public void init() {
@@ -146,12 +147,8 @@ public class FuncionarioView implements Serializable {
 		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
 	}
 
-	public FuncionarioLazyDataModel getLazyModel() {
+	public LazyDataModel<Funcionario> getLazyModel() {
 		return lazyModel;
-	}
-
-	public void setLazyModel(FuncionarioLazyDataModel lazyModel) {
-		this.lazyModel = lazyModel;
 	}
 
 }

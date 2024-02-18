@@ -70,7 +70,7 @@ App = {
             sessionStorage.setItem('scroll_position', $this.menu.scrollTop());
         });
 
-        $(document).off('click.showcase').on('click.showcase', function(event) {
+        $(document).off('click.hfsframework-prime').on('click.hfsframework-prime', function(event) {
             if (!$.contains($this.topbarMenu.get(0), event.target)) {
                 $this.hideTopbarSubmenu($this.topbarMenu.children('.topbar-submenu-active'));
             }
@@ -98,8 +98,8 @@ App = {
             $this.configurator.removeClass('layout-config-active');
         });
 
-        this.filterPanel.off('click.showcase', '.ui-autocomplete-item')
-            .on('click.showcase', '.ui-autocomplete-item', function(e) {
+        this.filterPanel.off('click.hfsframework-prime', '.ui-autocomplete-item')
+            .on('click.hfsframework-prime', '.ui-autocomplete-item', function(e) {
                 if (!$this.isLinkClicked) {
                     $this.isLinkClicked = true;
 

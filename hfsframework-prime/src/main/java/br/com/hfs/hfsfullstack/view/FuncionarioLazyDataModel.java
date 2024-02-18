@@ -34,10 +34,11 @@ public class FuncionarioLazyDataModel extends LazyDataModel<Funcionario> {
 	@Override
 	public Funcionario getRowData(String rowKey) {
 		for (Funcionario funcionario : this.baseLazyModel.getDatasource()) {
-			if (funcionario.getId().toString().equals(rowKey))
+			if (funcionario.getId() == Integer.parseInt(rowKey)) {
 				return funcionario;
+			}
 		}
-		return null;
+		return null;		
 	}
 
 	/* (non-Javadoc)
@@ -48,13 +49,24 @@ public class FuncionarioLazyDataModel extends LazyDataModel<Funcionario> {
 		return String.valueOf(funcionario.getId());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.primefaces.model.LazyDataModel#load(int, int, java.lang.String, org.primefaces.model.SortOrder, java.util.Map)
-	 */
 	@Override
-	public List<Funcionario> load(int first, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
-		List<Funcionario> data = this.baseLazyModel.load(first, pageSize, sortBy, filterBy, false);
+	public int count(Map<String, FilterMeta> filterBy) {
+		int total = 0;
+		
+		if (filterBy.isEmpty()) {
+			total =  this.baseLazyModel.getDataSize();
+		} else {
+			total =  (int) this.baseLazyModel.getDatasource().stream()
+				.filter(o -> this.baseLazyModel.filter(FacesContext.getCurrentInstance(), filterBy.values(), o))
+				.count();
+		}
+		return total;
+	}
 
+	@Override
+	public List<Funcionario> load(int offset, int pageSize, Map<String, SortMeta> sortBy, Map<String, FilterMeta> filterBy) {
+		List<Funcionario> data = this.baseLazyModel.load(offset, pageSize, sortBy, filterBy, false);
+		
 		// sort
         if (!sortBy.isEmpty()) {
             List<Comparator<Funcionario>> comparators = sortBy.values().stream()
@@ -69,14 +81,9 @@ public class FuncionarioLazyDataModel extends LazyDataModel<Funcionario> {
 		} else {
 			this.setRowCount(this.baseLazyModel.getDataSize());
 		}
-
+        
 		return data;
 	}
 	
-	@Override
-	public int count(Map<String, FilterMeta> filterBy) {
-		return (int) this.baseLazyModel.getDatasource().stream()
-				.filter(o -> this.baseLazyModel.filter(FacesContext.getCurrentInstance(), filterBy.values(), o)).count();
-	}
 	
 }

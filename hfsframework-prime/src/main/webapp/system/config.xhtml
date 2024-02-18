@@ -10,38 +10,28 @@
 
 <div class="ui-fluid formgrid grid">
     <div class="field col-12">
-        <div class="card px-6 py-6">
-<h:form>
-            <h5>Esquema de cor</h5>
-            <div class="ui-fluid formgrid grid">
-                <div class="field col-2">    
-					<p:commandLink actionListener="#{app.changeTheme('saga', false)}" oncomplete="window.location.reload();"
-						class="p-link w-4rem h-2rem" style="margin-right: 1rem">
-					    <i class="pi pi-sun" style="font-size: 2rem"></i>
-					</p:commandLink>
-					<p:commandLink actionListener="#{app.changeTheme('vela', true)}" oncomplete="window.location.reload();"
-						class="p-link w-4rem h-2rem" style="margin-right: 1rem">
-					    <i class="pi pi-star" style="font-size: 2rem"></i>
-					</p:commandLink>
-					<p:commandLink actionListener="#{app.changeTheme('arya', true)}" oncomplete="window.location.reload();"
-						class="p-link w-4rem h-2rem" style="margin-right: 1rem">
-					    <i class="pi pi-moon" style="font-size: 2rem"></i>
-					</p:commandLink>
-                </div>
-            </div>
-            
-            <h5>Escala</h5>
-            <div class="flex align-items-center">
-            	<p:button type="button" icon="pi pi-minus" onclick="App.decrementScale();" 
-            		class="p-button-text p-button-rounded w-2rem h-2rem mr-2"></p:button>
-                <div class="flex gap-2 align-items-center">
-                    
-                </div>
-                <p:button type="button" icon="pi pi-plus" onclick="App.incrementScale();" 
-            		class="p-button-text p-button-rounded w-2rem h-2rem mr-2"></p:button>                
-            </div>
-            
-</h:form>            
+        <div class="card px-12 py-12">
+			<h:form>
+			
+	            <h5>Esquema de cor</h5>
+	            <div class="ui-fluid formgrid grid">
+	                <div class="field col-4">    
+						<p:commandLink actionListener="#{app.changeTheme('saga', false)}" oncomplete="window.location.reload();"
+							class="p-link w-4rem h-2rem" style="margin-right: 1rem">
+						    <i class="pi pi-sun" style="font-size: 2rem"></i>
+						</p:commandLink>
+						<p:commandLink actionListener="#{app.changeTheme('vela', true)}" oncomplete="window.location.reload();"
+							class="p-link w-4rem h-2rem" style="margin-right: 1rem">
+						    <i class="pi pi-star" style="font-size: 2rem"></i>
+						</p:commandLink>
+						<p:commandLink actionListener="#{app.changeTheme('arya', true)}" oncomplete="window.location.reload();"
+							class="p-link w-4rem h-2rem" style="margin-right: 1rem">
+						    <i class="pi pi-moon" style="font-size: 2rem"></i>
+						</p:commandLink>
+	                </div>
+	            </div>
+	                        
+			</h:form>            
             
 		</div>
 	</div>

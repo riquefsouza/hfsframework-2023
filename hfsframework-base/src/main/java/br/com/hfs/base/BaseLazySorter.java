@@ -1,9 +1,9 @@
 package br.com.hfs.base;
 
-import java.lang.reflect.Method;
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.util.Comparator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.SortOrder;
 
 public class BaseLazySorter <T> implements Comparator<T> {
@@ -27,9 +27,28 @@ public class BaseLazySorter <T> implements Comparator<T> {
 		this.sortOrder = sortOrder;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-	 */
+	private Object getPropertyValueViaReflection(Object o, String field)
+            throws ReflectiveOperationException, IllegalArgumentException, IntrospectionException {
+		return new PropertyDescriptor(field, o.getClass()).getReadMethod().invoke(o);
+	}
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public int compare(T entidade1, T entidade2) {
+        try {
+            Object value1 = this.getPropertyValueViaReflection(entidade1, sortField);
+            Object value2 = this.getPropertyValueViaReflection(entidade2, sortField);
+
+            int value = ((Comparable<Object>) value1).compareTo(value2);
+
+            return SortOrder.ASCENDING.equals(sortOrder) ? value : -1 * value;
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+	/*
 	@SuppressWarnings("unchecked")
 	public int compare(T entidade1, T entidade2) {
 		try {
@@ -48,5 +67,5 @@ public class BaseLazySorter <T> implements Comparator<T> {
 			throw new RuntimeException();
 		}
 	}
-
+	*/
 }
