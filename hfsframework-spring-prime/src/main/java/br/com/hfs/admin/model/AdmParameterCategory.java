@@ -58,7 +58,7 @@ public class AdmParameterCategory implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy="admParameterCategory", orphanRemoval = true, fetch = FetchType.EAGER)
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	private Set<AdmParameter> admParameters;
 
 	/**

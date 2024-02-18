@@ -60,7 +60,7 @@ public class AdmMenuMB
 		this.newItemMenu = new AdmMenu();
 	}
 
-	public void delete(AdmMenu entity) {
+	public void delete() {
 		// super.excluir(entity);
 		if (this.menuSelected == null) {
 			generateErrorMessage("Please select a menu item to continue.");

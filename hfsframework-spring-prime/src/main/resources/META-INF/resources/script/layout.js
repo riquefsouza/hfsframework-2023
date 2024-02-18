@@ -13,18 +13,17 @@ App = {
         this.configuratorCloseButton = $('#layout-config-close-button');
         this.filterPanel = $('.layout-sidebar-filter-panel');
         this.activeSubmenus = [];
-        
+
         this.scale = 14;
         this.scales = [12, 13, 14, 15, 16];
+        this.decrementScale();
+        this.incrementScale();
         
         this._bindEvents();
         this.restoreMenu();
         $(document).ready(function() {
             document.getElementsByTagName("html")[0].style.visibility = "visible";
         });
-        
-        this.decrementScale();
-        this.incrementScale();
     },
 
     _bindEvents: function() {
@@ -124,7 +123,6 @@ App = {
                 $this.isLinkClicked = false;
                 e.preventDefault(); 
             });
-            
     },
 
     hideTopbarSubmenu: function(item) {
@@ -200,7 +198,6 @@ App = {
         
         document.documentElement.style.fontSize = `${this.scale}px`;        
     }
-
 }
 
 App.init();

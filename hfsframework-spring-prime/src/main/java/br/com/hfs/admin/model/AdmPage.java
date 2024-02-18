@@ -77,7 +77,7 @@ public class AdmPage implements Serializable {
 	
 	/** The adm menus. */
 	@JsonIgnore
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@OneToMany(targetEntity = AdmMenu.class, mappedBy = "admPage", fetch = FetchType.LAZY)	
 	private Set<AdmMenu> admMenus;	
 

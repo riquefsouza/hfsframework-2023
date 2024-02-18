@@ -7,6 +7,7 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 import org.primefaces.PrimeFaces;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.admin.model.AdmParameter;
@@ -17,7 +18,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 //@Named
@@ -27,7 +27,7 @@ public class AdmParameterView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Inject
+	@Autowired
 	private AdmParameterService service;
 	
 	private List<AdmParameter> listaBean;
@@ -36,7 +36,7 @@ public class AdmParameterView implements Serializable {
 	
 	private List<AdmParameter> selecionadosBean;
 
-	@Inject
+	@Autowired
 	private AdmParameterCategoryService admParameterCategoryService;
 
 	private List<AdmParameterCategory> listAdmParameterCategory;

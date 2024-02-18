@@ -25,7 +25,6 @@ public abstract class BaseViewQuery<T, I extends Serializable,
 
 	private List<T> listEntity;
 
-	@Autowired
 	private T entity;
 	
 	/**

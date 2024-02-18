@@ -35,7 +35,7 @@ public class AdmParameterRelMB extends BaseViewReportController implements Seria
 	private Boolean forceDownload;
 	
 	/* The relatorio. */
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmParameter")
 	//private IBaseReport report;
 

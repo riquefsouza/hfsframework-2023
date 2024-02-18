@@ -7,7 +7,6 @@ import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
 import org.primefaces.PrimeFaces;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.admin.model.AdmParameterCategory;
@@ -16,21 +15,22 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 
-//@Named
 @Component
+//@Named
 @ViewScoped
 //@HandlingExpectedErrors
 public class AdmParameterCategoryView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Autowired
+	@Inject
 	private AdmParameterCategoryService service;
 	
 	private List<AdmParameterCategory> listaBean;
 	
-	private AdmParameterCategory selecionadoBean;
+	private AdmParameterCategory bean;
 	
 	private List<AdmParameterCategory> selecionadosBean;
 
@@ -44,12 +44,12 @@ public class AdmParameterCategoryView implements Serializable {
 		return listaBean;
 	}
 
-	public AdmParameterCategory getSelecionadoBean() {
-		return selecionadoBean;
+	public AdmParameterCategory getBean() {
+		return bean;
 	}
 
-	public void setSelecionadoBean(AdmParameterCategory selecionadoBean) {
-		this.selecionadoBean = selecionadoBean;
+	public void setBean(AdmParameterCategory bean) {
+		this.bean = bean;
 	}
 
 	public List<AdmParameterCategory> getSelecionadosBean() {
@@ -61,18 +61,18 @@ public class AdmParameterCategoryView implements Serializable {
 	}
 
 	public void adicionar() {
-		this.selecionadoBean = new AdmParameterCategory();
+		this.bean = new AdmParameterCategory();
 	}
 	
 	public void salvar() {
-		if (this.selecionadoBean.getId() == null) {
-			this.listaBean.add(this.service.insert(this.selecionadoBean));
+		if (this.bean.getId() == null) {
+			this.listaBean.add(this.service.insert(this.bean));
 			
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Adicionado"));
 		} else {
 			OptionalInt indice = IntStream
 		      .range(0, listaBean.size())
-		      .filter(i -> listaBean.get(i).getId().equals(this.selecionadoBean.getId()))
+		      .filter(i -> listaBean.get(i).getId().equals(this.bean.getId()))
 		      //.mapToObj(i -> listaBean.get(i))
 		      .findFirst();
 			
@@ -88,9 +88,9 @@ public class AdmParameterCategoryView implements Serializable {
 	}
 
 	public void excluir() {
-		this.service.delete(this.selecionadoBean);
-		this.listaBean.remove(this.selecionadoBean);
-		this.selecionadoBean = null;
+		this.service.delete(this.bean);
+		this.listaBean.remove(this.bean);
+		this.bean = null;
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Categoria do Parâmetro Excluído"));
 		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
 	}
@@ -116,5 +116,5 @@ public class AdmParameterCategoryView implements Serializable {
 		PrimeFaces.current().ajax().update("form:messages", "form:tabela");
 		PrimeFaces.current().executeScript("PF('widgetTabela').clearFilters()");
 	}
-	
+
 }

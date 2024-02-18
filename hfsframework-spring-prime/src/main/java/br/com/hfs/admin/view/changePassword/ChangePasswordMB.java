@@ -3,6 +3,7 @@ package br.com.hfs.admin.view.changePassword;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.lowagie.text.BadElementException;
@@ -12,6 +13,7 @@ import br.com.hfs.admin.model.AdmUser;
 import br.com.hfs.admin.service.AdmUserService;
 import br.com.hfs.base.BaseViewRegister;
 import br.com.hfs.base.IBaseViewRegister;
+import br.com.hfs.view.app.App;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 
@@ -26,6 +28,9 @@ public class ChangePasswordMB extends
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	@Autowired
+	private App app;
+	
 	public ChangePasswordMB() {
 		super(AdmUser.class,
 				"admin/changePassword/listChangePassword", 
@@ -34,7 +39,7 @@ public class ChangePasswordMB extends
 
 	@PostConstruct
 	public void init() {
-		AdmUser user = new AdmUser(getAuthenticatedUser().getUser());
+		AdmUser user = new AdmUser(app.getAuthenticatedUser().getUser());
 		setBean(user);
 	}
 	

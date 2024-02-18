@@ -28,7 +28,7 @@ public class AdmUserRelMB extends BaseViewReportController implements Serializab
 	private Boolean forceDownload;
 	
 	/* The relatorio. */
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmUser")
 	//private IBaseReport report;
 

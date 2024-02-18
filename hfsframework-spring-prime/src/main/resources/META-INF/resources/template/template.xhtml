@@ -25,18 +25,6 @@
 <h:body>
     <f:view locale="#{app.locale}">
 
-		<p:outputPanel id="alert-messages">
-			<p:messages id="messages"
-				styleClass="alert-messages skipModalLoading" escape="false"
-				closable="true" showDetail="true"
-				showSummary="false" infoClass="alert alert-info skipModalLoading"
-				successClass="alert alert-success skipModalLoading"
-				errorClass="alert alert-danger skipModalLoading"
-				warnClass="alert alert-warning skipModalLoading" >
-				<p:autoUpdate />
-			</p:messages>
-		</p:outputPanel>
-
         <div class="layout-wrapper #{app.inputStyleClass}">
             <ui:include src="./topbar.xhtml"></ui:include>
             <ui:include src="./menu.xhtml"></ui:include>
@@ -52,6 +40,19 @@
                         </div>
                     </div>
                  -->    
+                 
+					<p:outputPanel id="alert-messages">
+						<p:messages id="messages"
+							styleClass="alert-messages skipModalLoading" escape="false"
+							closable="true" showDetail="true"
+							showSummary="false" infoClass="alert alert-info skipModalLoading"
+							successClass="alert alert-success skipModalLoading"
+							errorClass="alert alert-danger skipModalLoading"
+							warnClass="alert alert-warning skipModalLoading" >
+							<p:autoUpdate />
+						</p:messages>
+					</p:outputPanel>
+                 
                     <div class="content-section implementation">
                         <ui:insert name="implementation"></ui:insert>
                     </div>

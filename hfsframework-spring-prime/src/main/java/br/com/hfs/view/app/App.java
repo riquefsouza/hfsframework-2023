@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.UserCredentials;
+import br.com.hfs.admin.vo.AuthenticatedUserVO;
+import br.com.hfs.admin.vo.PermissionVO;
+import br.com.hfs.admin.vo.ProfileVO;
 import jakarta.enterprise.context.SessionScoped;
 
 @Component
@@ -101,7 +104,9 @@ public class App implements Serializable {
     	
     	if (!(authentication instanceof AnonymousAuthenticationToken)) {
     	    user.setUsername(authentication.getName());
-    	    //user.setPassword(authentication.getCredentials().toString());
+    	    if (authentication.getCredentials()!=null) {
+    	    	user.setPassword(authentication.getCredentials().toString());	
+    	    }    	    
     	    
     	    List<String> authorities = new ArrayList<String>();
     	    authentication.getAuthorities().forEach(item -> authorities.add(item.getAuthority()));    	    
@@ -109,4 +114,24 @@ public class App implements Serializable {
     	}
     	return user;
     }
+    
+    public AuthenticatedUserVO getAuthenticatedUser() {
+    	ProfileVO perfil = new ProfileVO();
+    	UserCredentials uc = getUserAuthenticated();
+    	AuthenticatedUserVO vo = new AuthenticatedUserVO();
+    	vo.setUserName(uc.getUsername());
+    	uc.getAuthorities().forEach(item -> {
+    		perfil.setDescription(item);
+    	});
+		
+    	if (!perfil.getDescription().isEmpty()) {
+        	PermissionVO perm = new PermissionVO();
+        	perm.setProfile(perfil);    	
+        	vo.getListPermission().add(perm);    		
+    	}
+    	vo.getUser().setLogin(vo.getUserName());
+    	
+    	return vo;
+    }
+    
 }

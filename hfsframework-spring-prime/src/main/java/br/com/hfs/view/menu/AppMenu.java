@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.admin.model.AdmMenu;
 import br.com.hfs.admin.service.AdmMenuService;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 @Component
 @ApplicationScoped
 public class AppMenu {
 
-	@Inject
+	@Autowired
 	private AdmMenuService service;
 
     List<MenuCategory> menuCategoria;
@@ -24,11 +24,11 @@ public class AppMenu {
 
     @PostConstruct
     public void init() {
-    	List<AdmMenu> lista = this.service.getRepository().findMenuRoot();
-    	
         menuCategoria = new ArrayList<>();
         menuItems = new ArrayList<>();
 
+        List<AdmMenu> lista = this.service.getRepository().findMenuRoot();
+        
         for (AdmMenu menu : lista) {
         
     		if (menu.getAdmSubMenus() != null) {

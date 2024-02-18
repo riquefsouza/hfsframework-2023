@@ -27,7 +27,7 @@ public class AdmProfileRelMB extends BaseViewReportController implements Seriali
 	
 	private Boolean forceDownload;
 	
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmProfile")
 	//private IBaseReport report;
 

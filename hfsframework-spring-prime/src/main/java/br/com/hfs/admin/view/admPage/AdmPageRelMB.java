@@ -33,7 +33,7 @@ public class AdmPageRelMB extends BaseViewReportController implements Serializab
 	
 	private Boolean forceDownload;
 	
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmPage")
 	//private IBaseReport report;
 

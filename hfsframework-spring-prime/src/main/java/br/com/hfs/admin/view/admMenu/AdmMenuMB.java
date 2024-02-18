@@ -21,6 +21,7 @@ import br.com.hfs.admin.service.AdmPageService;
 import br.com.hfs.base.BaseViewQuery;
 import br.com.hfs.base.IBaseViewQuery;
 import jakarta.annotation.PostConstruct;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 
 @Component
@@ -58,7 +59,7 @@ public class AdmMenuMB
 		this.newItemMenu = new AdmMenu();
 	}
 
-	public void delete(AdmMenu entity) {
+	public void delete() {
 		// super.excluir(entity);
 		if (this.menuSelected == null) {
 			generateErrorMessage("Please select a menu item to continue.");
@@ -295,7 +296,7 @@ public class AdmMenuMB
 		initListMenusParent();
 		if (this.menuSelected == null) {
 			generateErrorMessage("Please select a menu item to proceed with this action.");
-			context.validationFailed();
+			FacesContext.getCurrentInstance().validationFailed();
 		} else {
 			this.newItemMenu = ((AdmMenu) this.getService()
 					.findById(((AdmMenu) this.menuSelected.getData()).getId().longValue()).get());
@@ -307,7 +308,7 @@ public class AdmMenuMB
 		
 		if ((this.newItemMenu.getDescription() == null) || (this.newItemMenu.getDescription().trim().isEmpty())) {
 			generateErrorMessage("Error. Name of the Menu Item. Required field.");
-			context.validationFailed();
+			FacesContext.getCurrentInstance().validationFailed();
 		} else {
 			/*
 			if (getService().existeNovo(this.novoItemMenu.getDescricao())){

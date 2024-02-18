@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.LazyDataModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.hfsfullstack.model.Funcionario;
@@ -14,7 +15,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 @ViewScoped
@@ -25,7 +25,7 @@ public class FuncionarioView implements Serializable {
 
 	private boolean modoEditar = false;
 	
-	@Inject
+	@Autowired
 	private FuncionarioService service;
 	
 	private Funcionario bean;

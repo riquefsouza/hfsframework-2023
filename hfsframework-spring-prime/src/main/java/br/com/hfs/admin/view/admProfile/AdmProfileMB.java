@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.primefaces.model.DualListModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.lowagie.text.BadElementException;
@@ -21,7 +22,6 @@ import br.com.hfs.base.BaseViewRegister;
 import br.com.hfs.base.IBaseViewRegister;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 //@Named
@@ -34,14 +34,14 @@ public class AdmProfileMB extends
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	@Inject
+	@Autowired
 	private AdmUserService admUserService;
 
 	private DualListModel<AdmUser> dualListAdmUser;
 
 	private List<AdmUser> listAdmUser;
 	
-	@Inject
+	@Autowired
 	private AdmPageService admPageService;
 
 	private DualListModel<AdmPage> dualListAdmPage;

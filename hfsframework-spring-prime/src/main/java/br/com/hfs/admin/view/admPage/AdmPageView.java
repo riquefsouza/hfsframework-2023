@@ -9,6 +9,7 @@ import java.util.stream.IntStream;
 
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.admin.model.AdmPage;
@@ -19,7 +20,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 //@Named
@@ -31,7 +31,7 @@ public class AdmPageView implements Serializable {
 
 	private boolean modoEditar = false;
 	
-	@Inject
+	@Autowired
 	private AdmPageService service;
 	
 	private List<AdmPage> listaBean;
@@ -40,7 +40,7 @@ public class AdmPageView implements Serializable {
 	
 	private List<AdmPage> selecionadosBean;
 
-	@Inject
+	@Autowired
 	private AdmProfileService admProfileService;
 
 	private DualListModel<AdmProfile> dualListAdmProfile;

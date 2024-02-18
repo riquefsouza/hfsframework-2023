@@ -28,11 +28,12 @@ public abstract class BaseViewRegister<T, I extends Serializable,
 	
 	private Class<T> clazz;
 	
-	@Autowired
 	private BaseViewState state;
 	
 	public BaseViewRegister(Class<T> clazz, String pageList, String pageEdit){
 		super();
+		this.state = new BaseViewState();
+		
 		this.clazz = clazz;
 		
 		this.pageList = "/private/" + pageList + ".xhtml?faces-redirect=true";

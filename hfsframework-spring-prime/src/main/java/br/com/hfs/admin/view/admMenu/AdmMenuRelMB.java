@@ -29,7 +29,7 @@ public class AdmMenuRelMB extends BaseViewReportController implements Serializab
 	private Boolean forceDownload;
 	
 	/** The report. */
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmMenu")
 	//private IBaseReport report;
 

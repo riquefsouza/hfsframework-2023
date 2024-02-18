@@ -16,15 +16,15 @@
         
 		<div class="topbar-form mr-4">
 			<h:form>
-	             <h:outputLink value="#{request.contextPath}/system/usuario.xhtml" class="link layout-topbar-button mr-4">
+	            <h:outputLink value="#{request.contextPath}/system/usuario.xhtml" class="link layout-topbar-button mr-4">
 		            <i class="pi pi-user"></i>                 
-	             </h:outputLink>
-	             <h:outputLink value="#{request.contextPath}/system/config.xhtml" class="link layout-topbar-button mr-4">
+	            </h:outputLink>
+	            <h:outputLink value="#{request.contextPath}/system/config.xhtml" class="link layout-topbar-button mr-4">
 		            <i class="pi pi-cog"></i>
-	             </h:outputLink>
-	            <p:commandLink action="#{hfsAuthenticator.logOut}" immediate="true" class="link layout-topbar-button mr-4">
+	            </h:outputLink>
+	            <p:link href="#{request.contextPath}/logout" class="link layout-topbar-button mr-4">
 		            <i class="pi pi-sign-out"></i>
-	            </p:commandLink>            
+	            </p:link>      
 			</h:form>
 		</div>        
 

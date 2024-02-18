@@ -17,31 +17,36 @@
 			    </f:facet>
                 <p class="m-0">
                     <b>ID: </b>
-                    #{systemMB.authenticatedUser.user.id}	
+
                     <br></br>
                     <br></br>
                     <b>Login: </b>
-                    #{systemMB.authenticatedUser.user.login}
+                    #{app.userAuthenticated.username}
                     <br></br>
                     <br></br>
                     <b>E-mail: </b>
-                    #{systemMB.authenticatedUser.user.email}
+
+                    <br></br>
+                    <br></br>
+                    <b>E-mail verificado: </b>
+
                     <br></br>
                     <br></br>
                     <b>Nome: </b>
-                    #{systemMB.authenticatedUser.user.name}
+
                     <br></br>
                     <br></br>
                     <b>É administrador: </b>
-                    #{systemMB.authenticatedUser.isAdministrator() ? 'Sim' : 'Não' }
+
                     <br></br>
                     <br></br>
                     <b>Papéis: </b>
-                    <ui:repeat value="#{systemMB.authenticatedUser.listPermission}" var="role">
-                    	<li>#{role.profile.description}</li>                    
+                    <ui:repeat value="#{app.userAuthenticated.authorities}" var="role">
+                    	<li>#{role}</li>                    
                     </ui:repeat>
                     <br></br>
                     <br></br>
+                    
                 </p>			    
 			</p:card>        
         

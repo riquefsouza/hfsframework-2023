@@ -27,7 +27,7 @@
             <p:toolbar>
                 <p:toolbarGroup align="right">                                       
    					<p:commandButton value="Export" title="Export" onclick="form.target='_blank'"
-   					 	icon="pi pi-upload" styleClass="ui-button-help mr-2
+   					 	icon="pi pi-upload" styleClass="ui-button-help mr-2"
    						id="btnExport" action="#{admMenuRelMB.export()}"
 						ajax="false" />
 								
@@ -62,7 +62,7 @@
 				<p:commandButton value="Sim" update="@form"
 					oncomplete="PF('confirmation').hide()"
 					styleClass="btn btn-success"
-					action="#{admMenuMB.delete(admMenuMB.menu)}" />
+					action="#{admMenuMB.delete}" />
 				<p:spacer width="10" height="10" />
 				<p:commandButton value="Não" onclick="PF('confirmation').hide()"
 					styleClass="btn btn-danger" type="button" />

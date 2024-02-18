@@ -85,7 +85,7 @@ public class AdmProfile implements Serializable {
 	/** The adm paginas. */
 	//@JsonIgnore
 	//@JsonSerialize(using = AdmPageListSerializer.class)
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@ManyToMany(fetch = FetchType.EAGER) //, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "ADM_PAGE_PROFILE", joinColumns = { 
 			@JoinColumn(name = "PGL_PRF_SEQ") }, inverseJoinColumns = {	@JoinColumn(name = "PGL_PAG_SEQ") })
@@ -94,7 +94,7 @@ public class AdmProfile implements Serializable {
 	/** The adm funcionarios. */
 	//@JsonIgnore
 	//@JsonSerialize(using = AdmUserListSerializer.class)
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@ManyToMany(fetch = FetchType.EAGER) //, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "ADM_USER_PROFILE", joinColumns = {
 			@JoinColumn(name = "USP_PRF_SEQ") }, inverseJoinColumns = { @JoinColumn(name = "USP_USE_SEQ") })

@@ -90,7 +90,7 @@ public class AdmMenu implements Serializable, Comparable<AdmMenu> {
 	//@OrderBy("order")
 	@JsonIgnore
 	//@JsonSerialize(using = AdmMenuListSerializer.class)
-	@Fetch(FetchMode.JOIN)
+	@Fetch(FetchMode.SUBSELECT)
 	@OneToMany(mappedBy = "admMenuParent", orphanRemoval = true, fetch = FetchType.EAGER)	
 	private List<AdmMenu> admSubMenus;
 

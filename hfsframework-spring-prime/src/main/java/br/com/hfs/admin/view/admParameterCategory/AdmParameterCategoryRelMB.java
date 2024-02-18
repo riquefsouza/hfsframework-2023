@@ -28,7 +28,7 @@ public class AdmParameterCategoryRelMB extends BaseViewReportController implemen
 
 	private Boolean forceDownload;
 
-	//@Inject
+	//@Autowired
 	//@ReportPath("AdmParameterCategory")
 	//private IBaseReport report;
 

@@ -33,7 +33,7 @@ public abstract class BaseService<T, I extends Serializable, C extends JpaReposi
 	@Autowired
 	protected C repository;
 
-	//@Inject
+	//@Autowired
 	//protected AplicacaoUtil aplicacaoUtil;
 	
 	@Autowired

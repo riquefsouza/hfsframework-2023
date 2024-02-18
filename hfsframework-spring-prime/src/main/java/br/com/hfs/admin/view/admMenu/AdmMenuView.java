@@ -7,6 +7,7 @@ import java.util.List;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.hfs.admin.model.AdmMenu;
@@ -17,7 +18,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 //@Named
@@ -27,10 +27,10 @@ public class AdmMenuView implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Inject
+	@Autowired
 	private AdmMenuService service;
 	
-	@Inject
+	@Autowired
 	private AdmPageService admPaginaService;
 
 	private AdmMenu bean;

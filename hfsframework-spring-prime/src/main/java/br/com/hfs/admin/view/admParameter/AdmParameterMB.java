@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.lowagie.text.BadElementException;
@@ -23,7 +24,6 @@ import br.com.hfs.base.BaseViewRegister;
 import br.com.hfs.base.IBaseViewRegister;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 
 @Component
 //@Named
@@ -36,7 +36,7 @@ BaseViewRegister<AdmParameter, Long, AdmParameterService>
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	@Inject
+	@Autowired
 	private AdmParameterCategoryService admParameterCategoryService;
 
 	private List<AdmParameterCategory> listAdmParameterCategory;

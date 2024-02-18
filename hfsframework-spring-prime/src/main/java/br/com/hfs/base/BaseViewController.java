@@ -32,8 +32,8 @@ public abstract class BaseViewController {
 	protected Logger log = LogManager.getLogger(BaseViewController.class);
 
 	/** The context. */
-	@Autowired
-	protected FacesContext context;
+	//@Autowired
+	//protected FacesContext context;
 	
 	/** The pdf utils. */
 	@Autowired
@@ -54,37 +54,37 @@ public abstract class BaseViewController {
 	}
 
 	public void generateErrorMessage(String message) {
-		context.addMessage(null,
+		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, message));
 	}
 
 	public void generateErrorMessage(Exception e, String message) {
-		context.addMessage(null,
+		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ExceptionUtil.getErrors(log, e, message)));
 	}
 
 	public void generateInformativeMessage(String message) {
-		context.addMessage(null,
+		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 	}
 
 	public void generateWarningMessage(String message) {
-		context.addMessage(null,
+		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
 	}
 
 	public void generateErrorMessage(Exception e, String message, String clientId) {
-		context.addMessage(clientId,
+		FacesContext.getCurrentInstance().addMessage(clientId,
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ExceptionUtil.getErrors(log, e, message)));
 	}
 
 	public void generateInformativeMessage(String message, String clientId) {
-		context.addMessage(clientId,
+		FacesContext.getCurrentInstance().addMessage(clientId,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 	}
 
 	public void generateWarningMessage(String message, String clientId) {
-		context.addMessage(clientId,
+		FacesContext.getCurrentInstance().addMessage(clientId,
 				new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
 	}
 
@@ -144,7 +144,7 @@ public abstract class BaseViewController {
 	 * @return the id menu
 	 */
 	private String getIdMenu() {
-		Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		String sIdMenu = params.get("id");
 		if (sIdMenu != null && !sIdMenu.isEmpty()) {
 			return sIdMenu;
@@ -173,7 +173,7 @@ public abstract class BaseViewController {
 	 * @return the date
 	 */
 	public Date dataMesAnoViewChange(Date campo, String formularioCampo){
-		Map<String, String> requestParams = context.getExternalContext().getRequestParameterMap();
+		Map<String, String> requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 		Calendar c = Calendar.getInstance();
 		if (campo == null)
 			campo = c.getTime();
