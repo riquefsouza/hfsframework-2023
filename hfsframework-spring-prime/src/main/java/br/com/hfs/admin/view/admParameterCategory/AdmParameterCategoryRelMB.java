@@ -43,12 +43,11 @@ public class AdmParameterCategoryRelMB extends BaseViewReportController implemen
 	 * @see br.jus.trt1.hfsframework.base.IBaseViewRelatorio#exportar()
 	 */
 	public void export() {
-		Map<String, Object> params = getParametros();
+		Map<String, Object> params = getParameters();
 		params.put("PARAMETER1", "");
 
 		IBaseReport report = new BaseReportImpl("AdmParameterCategory");
-		super.export(report, service.findAll(), params, this.forceDownload);
-		
+		super.export(report, service.findAll(), params, this.forceDownload);	
 	}
 
 	public Boolean getForceDownload() {

@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 import br.com.hfs.admin.vo.UserVO;
 import br.com.hfs.converter.BooleanToStringConverter;
 import jakarta.persistence.Column;
@@ -19,6 +16,7 @@ import jakarta.persistence.NamedNativeQueries;
 import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
@@ -54,15 +52,9 @@ public class AdmUser implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_USER_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_USER_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_USER_ID_GENERATOR")	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_USER_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_USER_ID_GENERATOR", sequenceName = "ADM_USER_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "USU_SEQ")
 	private Long id;
 
@@ -87,11 +79,11 @@ public class AdmUser implements Serializable {
 
 	/** The password. */
 	//@JsonIgnore
-	@NotEmpty
-	@Size(min=4, max=128)
+	//@NotEmpty
+	//@Size(min=4, max=128)
 	@Column(name = "USU_PASSWORD", nullable = false, length = 128)
 	private String password;
-	
+    
 	@Convert(converter = BooleanToStringConverter.class)
 	@Column(name="USU_ACTIVE")
 	private Boolean active;
@@ -113,7 +105,13 @@ public class AdmUser implements Serializable {
 	@Size(min=4, max=64)
 	@Transient
 	private String confirmNewPassword;
-    
+	
+	@Transient
+	private String ip;
+	
+	@Transient
+	private String ldapDN;
+	
 	/**
 	 * Instantiates a new adm usuario.
 	 */
@@ -137,19 +135,9 @@ public class AdmUser implements Serializable {
 		//this.password = vo.ge;
 		this.active = vo.getActive();
 		this.admIdProfiles = vo.getAdmIdProfiles();
-		this.userProfiles = vo.getUserProfiles();
+		this.userProfiles = vo.getUserProfiles();		
 	}
-/*	
-	public AdmUser(AdmUserForm vo) {
-		this.id = vo.getId();
-		this.email = vo.getEmail();
-		this.login = vo.getLogin();
-		this.name = vo.getName();
-		this.password = vo.getPassword();
-		this.active = vo.getActive();
-		this.admIdProfiles = vo.getAdmIdProfiles();
-	}
-*/	
+	
 	public void clean() {
 		this.id = 0L;
 		this.email = "";
@@ -157,7 +145,7 @@ public class AdmUser implements Serializable {
 		this.name = "";
 		this.password = "";
 		this.active = false;
-		this.admIdProfiles = new ArrayList<Long>();
+		this.admIdProfiles = new ArrayList<Long>();		
 	}
 
 	/**
@@ -304,7 +292,7 @@ public class AdmUser implements Serializable {
 		
 		return u;
 	}
-
+	
 	public String getCurrentPassword() {
 		return currentPassword;
 	}
@@ -351,6 +339,22 @@ public class AdmUser implements Serializable {
 
 	public void setUserProfiles(String userProfiles) {
 		this.userProfiles = userProfiles;
+	}	
+
+	public String getIp() {
+		return ip;
 	}
-	
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	public String getLdapDN() {
+		return ldapDN;
+	}
+
+	public void setLdapDN(String ldapDN) {
+		this.ldapDN = ldapDN;
+	}
+
  }

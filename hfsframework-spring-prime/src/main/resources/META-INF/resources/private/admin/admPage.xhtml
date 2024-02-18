@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="implementation">
+        <h:form id="formAdmPage">
+        	<p:growl id="messages" showDetail="true"/>
+        
+            <p:outputPanel class="card crud-demo" rendered="#{not admPageView.modoEditar}">
+				<p:panel id="panelBasic" header="Páginas"
+					styleClass="p-mb-2">
+					<div class="ui-fluid formgrid grid">
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
+							<br></br>	
+							<p:selectOneMenu id="cmbTypeReport" value="#{admPageRelMB.typeReport}">
+								<f:selectItems value="#{admPageRelMB.listTypeReport}" />
+							</p:selectOneMenu>    
+						</div>
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="forceDownload" value="Forçar download:" />
+							<p:spacer width="10" height="10" />	
+							<p:selectBooleanCheckbox id="forceDownload" value="#{admPageRelMB.forceDownload}" />    
+						</div>
+					</div>					
+				</p:panel>
+
+                <p:toolbar>
+                    <p:toolbarGroup>                                        
+                        <p:commandButton value="Adicionar" icon="pi pi-plus" actionListener="#{admPageView.adicionar}"
+                                         update="@form" 
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                        </p:commandButton>
+                        <p:commandButton id="btnDelete" value="#{admPageView.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{admPageView.deleteSelecionadosBean}"
+                                         styleClass="ui-button-danger" disabled="#{!admPageView.hasSelecionadosBean()}"
+                                         update="@this">
+                                <p:confirm header="Confirmation" message="Excluir a página selecionada?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">						
+                        <p:commandButton value="Exportar" icon="pi pi-upload" onclick="form.target='_blank'" 
+                        	action="#{admPageRelMB.export}" id="btnExportar" ajax="false" 
+                        	styleClass="ui-button-help p-mr-2 p-mb-2" style="margin-right: .5rem">
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                                
+                <p:dataTable id="tabela" widgetVar="widgetTabela" var="item" value="#{admPageView.listaBean}"
+                             reflow="true" styleClass="crud-table" responsiveLayout="scroll"
+                             selection="#{admPageView.selecionadosBean}" rowKey="#{item.id}" paginator="true"
+                             rows="10" rowSelectMode="add" paginatorPosition="both"
+                             rowsPerPageTemplate="10,30,50,100,150,200" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="Mostrando {startRecord} até {endRecord} de {totalRecords} entradas"                             
+                             rowHover="true">
+                    <f:facet name="header">
+                        <div class="crud-table-header">
+                            <span style="font-weight: bold">Páginas </span>
+
+                            <span class="filter-container ui-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('widgetTabela').filter()" placeholder="Pesquisar"/>
+                            </span>
+
+                        </div>
+                    </f:facet>
+                    
+                    <f:facet name="footer">
+	                    <div class="p-d-flex p-ai-center p-jc-between">
+	                        No total existem #{admPageView.listaBean.size()} páginas.
+	                    </div>                    
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":formAdmPage:btnDelete"/>
+                    <p:ajax event="rowUnselect" update=":formAdmPage:btnDelete"/>
+                    <p:ajax event="rowSelectCheckbox" update=":formAdmPage:btnDelete"/>
+                    <p:ajax event="rowUnselectCheckbox" update=":formAdmPage:btnDelete"/>
+                    <p:ajax event="toggleSelect" update=":formAdmPage:btnDelete"/>
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Id" sortBy="#{item.id}" filterBy="#{item.id}" style="width:5%; min-width:5rem;">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>                    
+					<p:column headerText="Página" sortBy="#{item.url}" filterBy="#{item.url}" filterMatchMode="contains">
+						<h:outputText value="#{item.url}" />
+					</p:column>
+					<p:column headerText="Descrição" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="contains">
+						<h:outputText value="#{item.description}" />
+					</p:column>                    
+					<p:column headerText="Perfil(s) da página" sortBy="#{item.profilesPage}" filterBy="#{item.profilesPage}" filterMatchMode="contains">
+						<h:outputText value="#{item.profilesPage}" />
+					</p:column>                    
+                                        
+                    <p:column exportable="false" style="width: 25px;">
+			        	<p:menuButton icon="pi pi-ellipsis-v" buttonStyleClass="ui-button-flat ui-button-plain" buttonStyle="border-style: none;">
+				            <p:menuitem value="Editar" icon="pi pi-pencil" update="@form" actionListener="#{admPageView.editar(item)}" /> 
+				            <p:menuitem value="Excluir" icon="pi pi-trash" update="@form" actionListener="#{admPageView.chamarDialogExcluir(item)}" />
+		    		    </p:menuButton>                    	
+                    </p:column>
+                        
+                </p:dataTable>
+                
+		         <p:confirmDialog widgetVar="excluirDialog" showEffect="fade" width="300"
+		                          message="Deseja excluir?" header="Confirma" severity="warn">
+		             <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{admPageView.excluir}"
+		                              update="@form" oncomplete="PF('excluirDialog').hide()"/>
+		             <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+		                              onclick="PF('excluirDialog').hide()"/>
+		         </p:confirmDialog>
+		
+		         <p:confirmDialog global="true" showEffect="fade" width="300">
+		             <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+		             <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+		                              icon="pi pi-times"/>
+		         </p:confirmDialog>
+                
+            </p:outputPanel>
+        
+        	<p:outputPanel rendered="#{admPageView.modoEditar}">
+				<p:panel header="Detalhes da página">
+	                <p:toolbar>
+	                    <p:toolbarGroup>                                        
+	                    </p:toolbarGroup>
+	                    <p:toolbarGroup align="right">
+	                        <p:commandButton value="Cancelar" icon="pi pi-times" actionListener="#{admPageView.cancelarEditar}" 
+	                        				 styleClass="ui-button-secondary mr-2" update="@form" immediate="true" >	                        	
+	                        </p:commandButton>
+	                        <p:commandButton value="Limpar" icon="pi pi-star" actionListener="#{admPageView.limpar}" 
+	                        				 styleClass="ui-button-primary mr-2" update=":formAdmPage:conteudoEditDialog" >
+	                        	<p:resetInput target=":formAdmPage:conteudoEditDialog"/>
+	                        </p:commandButton>	                        
+	                        <p:commandButton value="Salvar" icon="pi pi-check" action="#{admPageView.salvar}"
+	                                         styleClass="ui-button-success mr-2" update="@form" />	                    						
+	                    </p:toolbarGroup>
+	                </p:toolbar>
+
+                    <p:outputPanel id="conteudoEditDialog" styleClass="card ui-fluid">
+                        
+                        	<div class="field">
+								<p:outputLabel for="url" value="Página:" />
+								<p:inputText id="url" value="#{admPageView.bean.url}" 
+									style="width: 100%" label="Página" required="true">
+								</p:inputText>
+                        	</div>
+                            <div class="field">
+								<p:outputLabel for="description" value="Descrição:" />
+								<p:inputTextarea id="description" label="Descrição" rows="6" tyle="width: 100%" 
+									value="#{admPageView.bean.description}" maxlength="255"
+									counter="displayDescription" counterTemplate="{0} caracteres restantes." 
+									autoResize="false" required="true" />
+								<h:outputText id="displayDescription" />
+                            </div>
+                            <div class="field">
+                            	<p:outputLabel for="pickListProfile" value="Perfil(s) da página:" />
+								<p:pickList id="pickListProfile" responsive="true"
+									value="#{admPageView.dualListAdmProfile}"
+									converter="admProfileConverter" var="item"
+									itemLabel="#{item.description}" itemValue="#{item}"
+									showSourceFilter="true" showTargetFilter="true"
+									filterMatchMode="contains" >
+									<f:facet name="sourceCaption">Disponível</f:facet>
+									<f:facet name="targetCaption">Selecionada</f:facet>
+								</p:pickList>
+                            </div>
+                        
+                    </p:outputPanel>
+					
+				</p:panel>
+
+            </p:outputPanel>
+            
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

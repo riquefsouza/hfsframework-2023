@@ -15,6 +15,7 @@ import br.com.hfs.admin.model.AdmPage;
 import br.com.hfs.admin.model.AdmProfile;
 import br.com.hfs.admin.model.AdmUser;
 import br.com.hfs.admin.repository.AdmProfileRepository;
+import br.com.hfs.admin.repository.AdmUserRepository;
 import br.com.hfs.admin.vo.AuthenticatedUserVO;
 import br.com.hfs.admin.vo.MenuVO;
 import br.com.hfs.admin.vo.PermissionVO;
@@ -29,8 +30,8 @@ public class AdmProfileService extends BaseService<AdmProfile, Long, AdmProfileR
 	@Autowired
 	private AdmMenuService admMenuService;
 
-	//@Autowired
-	//private AdmUserService admUserService;
+	@Autowired
+	private AdmUserRepository admUserRepository;
 
 	public AdmProfileService() {
 		super(AdmProfile.class);
@@ -122,18 +123,19 @@ public class AdmProfileService extends BaseService<AdmProfile, Long, AdmProfileR
 		List<AdmMenu> listaMenuParent = this.findMenuParentByProfile(profilePai);
 		return admMenuService.toListMenuVO(listaMenuParent);		
 	}
-	/*
-	public List<AdmUser> findUsersPorProfile(AdmProfile profile){
+	
+	public List<AdmUser> findUsersByProfile(AdmProfile profile){
 		List<AdmUser> lista = new ArrayList<AdmUser>();
 		List<Long> listaCod = repository.findUsersByProfile(profile);
 		
+		//admUserService.setAdmProfileService(this);
 		for (Long item : listaCod) {
-			lista.add(admUserService.findById(item).get());
+			lista.add(admUserRepository.findById(item).get());
 		}
 		
 		return lista;
 	}
-	*/
+	
 	public List<AdmProfile> findProfilesByUser(Long idUser) {
 		return repository.findProfilesByUser(idUser);
 	}
@@ -168,6 +170,10 @@ public class AdmProfileService extends BaseService<AdmProfile, Long, AdmProfileR
 		return admMenuService.toListMenuVO(listaAdminMenuParent);
 	}
 
+	public List<AdmPage> findPagesByProfile(AdmProfile profile){
+		return repository.findPagesByProfile(profile);
+	}
+	
 	public List<MenuItemDTO> mountMenuItem(List<Long> listaIdProfile) {
 		List<MenuItemDTO> lista = new ArrayList<MenuItemDTO>();
 				

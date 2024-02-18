@@ -104,7 +104,7 @@ public abstract class BaseViewReportController
 	 *
 	 * @return the parametros
 	 */
-	public Map<String, Object> getParametros() {
+	public Map<String, Object> getParameters() {
 		Map<String, Object> params = new HashMap<String, Object>();
 
 	    //ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
@@ -150,7 +150,7 @@ public abstract class BaseViewReportController
 			}
 			
 		} else {
-			generateInfoMessage("No records found to export report.");
+			generateInformativeMessage("No records found to export report.");
 		}
 		
 		return buffer;
@@ -179,7 +179,7 @@ public abstract class BaseViewReportController
 			
 			this.renderer.render(buffer, tipoRel, "report." + tipoRel.name().toLowerCase(), forcarDownload);			
 		} else {
-			generateInfoMessage("No records found to export report.");
+			generateInformativeMessage("No records found to export report.");
 		}		
 	}
 
@@ -234,7 +234,7 @@ public abstract class BaseViewReportController
 	}
 
 	public ResponseEntity<ByteArrayResource> exportReport(ReportParamsDTO reportParamsDTO, Collection<?> colecao) {
-		Map<String, Object> params = this.getParametros();		
+		Map<String, Object> params = this.getParameters();		
 		reportParamsDTO.getParams().forEach(param -> {
 			params.put(param.getKey(), param.getValue());
 		});

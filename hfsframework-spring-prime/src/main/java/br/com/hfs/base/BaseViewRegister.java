@@ -2,239 +2,237 @@ package br.com.hfs.base;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 
-import org.slf4j.LoggerFactory;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.hfs.base.report.BaseReportImpl;
-import br.com.hfs.base.report.BaseViewReportController;
-import br.com.hfs.base.report.IBaseReport;
-import br.com.hfs.base.report.IBaseViewReport;
-import br.com.hfs.base.report.ReportGroupVO;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+public abstract class BaseViewRegister<T, I extends Serializable, 
+		B extends BaseService<T, I, ? extends JpaRepository<T, I>>>
+		extends BaseViewController implements Serializable {
 
-public abstract class BaseViewRegister<T, 
-	I extends Serializable, 
-	B extends BaseService<T, I, ? extends JpaRepository<T, I>>
-		> extends BaseViewReportController implements IBaseViewReport {
-	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	private String pageList;
+	
+	private String pageEdit;
+	
 	@Autowired
-	protected B service;
+	private B service;
 
-	private String listPage;
+	private List<T> listEntity;
 
-	private String editPage;
-	
-	private String reportName;
-	
-	private Boolean forceDownload;
+	private T entity;
 	
 	private Class<T> clazz;
 	
-	public BaseViewRegister(String listPage, String editPage, String reportName, Class<T> clazz) {
+	@Autowired
+	private BaseViewState state;
+	
+	public BaseViewRegister(Class<T> clazz, String pageList, String pageEdit){
 		super();
-		this.forceDownload = false;
-		
-		log = LoggerFactory.getLogger(BaseViewRegister.class);
-		
-		this.listPage = listPage;
-		this.editPage = editPage;
-		this.reportName = reportName;
 		this.clazz = clazz;
-	}
-
-	/*
-	@GetMapping
-	public String listPaged(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber,
-			@RequestParam(value = "size", required = false, defaultValue = "5") int size, 
-			@RequestParam(value = "sort", required = false, defaultValue = "ASC,id") String sort,
-			Model model) {
 		
-		Sort sorted = Sort.by(Direction.ASC, "id");
-	    String[] paramSort = sort.split(",", 2);
-	    
-	    if (paramSort.length > 0) {
-	    	if (paramSort[0].equals("ASC")) 
-	    		sorted = Sort.by(Direction.ASC, paramSort[1].toLowerCase());
-	    	else
-	    		sorted = Sort.by(Direction.DESC, paramSort[1].toLowerCase());
-	    }
-	    
-		model.addAttribute("pagedBean", service.getPage(pageNumber, size, sorted));
-		return getListPage();
-	}
-	*/
-	 
-	@GetMapping
-	public ModelAndView list(T bean) {
-		Optional<ModelAndView> mv = getPage(getListPage());
-		if (mv.isPresent()) {
-			mv.get().addObject("bean", bean);
-			
-			List<T> lista = service.findAll();
-			mv.get().addObject("listBean", lista);
-		}
-		return mv.get();
-	}
-
-	@GetMapping("/add")
-	public ModelAndView add(T bean) throws Exception {
-		Optional<ModelAndView> mv = getPage(getEditPage());
-		
-		if (mv.isPresent()) {
-			bean = clazz.getDeclaredConstructor().newInstance();
-			mv.get().addObject("bean", bean);
-		}
-		
-		return mv.get();
+		this.pageList = "/private/" + pageList + ".xhtml?faces-redirect=true";
+		this.pageEdit = "/private/" + pageEdit + ".xhtml?faces-redirect=true";
 	}
 	
-	@GetMapping("/edit/{id}")
-	public ModelAndView edit(@PathVariable I id) {
-		Optional<ModelAndView> mv = getPage(getEditPage());
-		
-		Optional<T> obj = service.findById(id);
-		mv.get().addObject("bean", obj.get());
-		
-		return mv.get();
+	protected void updateDataTableList() {
+		this.listEntity = service.findAll();
 	}
 
-	@PostMapping
-	public ModelAndView save(@Valid @ModelAttribute T bean, 
-			BindingResult result, RedirectAttributes attributes) {
-		Optional<ModelAndView> mv = getPage(this.listPage);
-
-		if (result.hasErrors()){
-			mv.get().setViewName(this.editPage);
-			return mv.get();
-		}
+	@SuppressWarnings("unchecked")
+	protected boolean beanInSession() {
+		state = BaseViewState.getState(getSession());
 		
-		try {
-			
-			//if (bean.getId()==null) 
-				//this.service.insert(bean);
-			//else
-				this.service.update(bean);
-			
-			mv.get().addObject("bean", bean);
-			
-			List<T> lista = service.findAll();
-			mv.get().addObject("listBean", lista);
-			
-		} catch (RestClientException e) {
-			this.showDangerMessage(mv.get(), e);
-			return mv.get();
+		T bean = (T) getSession().getAttribute(clazz.getSimpleName() + "_bean");
+		if (bean!=null) {
+			setEntity(bean);
+			return true;
 		}
-		
-		return mv.get();
+		return false;
+	}
+	
+	public String getPageList() {
+		return pageList;
 	}
 
-	protected ModelAndView saveCallableBefore(@Valid @ModelAttribute T bean, 
-			BindingResult result, RedirectAttributes attributes, Callable<String> fnc) {
-		Optional<ModelAndView> mv = getPage(this.listPage);
+	public String getPageEdit() {
+		return pageEdit;
+	}
+	
+	protected String onInsert(T entity) {
+		this.state.insertMode(getSession());
+		
+		getSession().setAttribute(clazz.getSimpleName() + "_bean", entity);
+		
+		setEntity(entity);
 
-		if (result.hasErrors()){
-			mv.get().setViewName(this.editPage);
-			return mv.get();
+		return getPageEdit();
+	}
+
+	public String onEdit(T entity) {
+		this.state.editMode(getSession());
+		
+		if (entity == null) {
+			generateErrorMessage(SELECT_RECORD);
+			return "";
 		}
 		
+		getSession().setAttribute(clazz.getSimpleName() + "_bean", entity);
+		
+		setEntity(entity);
+		return getPageEdit();
+	}
+	
+	public String onVisualize(T entity) {
+		this.state.viewMode(getSession());
+		
+		if (entity == null) {
+			generateErrorMessage(SELECT_RECORD);
+			return "";
+		}
+		setEntity(entity);
+		return getPageEdit();
+	}
+	
+	public void prepareToDelete(T entity) {
+		if (entity == null) {
+			generateErrorMessage(SELECT_RECORD);
+			return;
+		}
+		PrimeFaces.current().executeScript("PF('confirmation').show()");
+	}
+	
+	public boolean delete(T entity, String hasError, String messageError) {
+	    if (entity == null) {
+	    	generateErrorMessage(SELECT_RECORD);
+	        return false;
+	    }
+	    try {
+	        service.delete(entity);
+	        
+	        getSession().removeAttribute(clazz.getSimpleName() + "_bean");
+	        updateDataTableList();
+	        return true;
+	    } catch (Exception e) {
+	        if (!hasError.isEmpty() && !messageError.isEmpty()){
+	            if (e.getCause().toString().contains(hasError)) {
+	            	addMessageWarningDialog(messageError);
+	            }                
+	        } else if (!messageError.isEmpty()){
+	        	addMessageWarningDialog(messageError);
+	        } else {
+	        	generateErrorMessage(e, ERROR_DELETE);
+	        }
+	        return false;
+	    }
+	}
+	
+	public void delete(T entity) {
+		this.delete(entity, "", "");
+	}
+	
+	public String cancelEdition() {
+		return getPageList();
+	}
+	
+	protected String save(I id, String description, String fieldName, String hasError, 
+			String errorMessage, Callable<String> fnc) {
+		
+		
+		if (description!=null){
+			if (description.isEmpty()) {
+				generateErrorMessage("Field '"+ fieldName +"' cannot be empty.");
+				return null;
+			}
+			
+			if (state.isInsertMode()){
+				if (this.service.thereIsFieldNew("description", description)){
+					generateErrorMessage("Field '"+ fieldName +"' already exists.");
+					return null;					
+				}
+			} else {				
+				if (this.service.thereIsFieldOld("description", id, description)){
+					generateErrorMessage("Field '"+ fieldName +"' already exists.");
+					return null;										
+				}				
+			}
+		}
+		
+		
 		try {
+			if (id == null) {
+				setEntity((T) this.service.insert(getEntity()));
+			} else {
+				setEntity((T) this.service.update(getEntity()));
+			}
 			
 			if (fnc!=null){
 				fnc.call();
 			}
 			
-			//if (bean.getId()==null) 
-				//this.service.insert(bean);
-			//else
-				this.service.update(bean);
+			this.state.saveMode(getSession(), true);
 			
-			mv.get().addObject("bean", bean);
-
-			List<T> lista = service.findAll();
-			mv.get().addObject("listBean", lista);
-
 		} catch (Exception e) {
-			this.showDangerMessage(mv.get(), e);
-			return mv.get();
+			this.state.saveMode(getSession(), false);
+			
+			if (e.getMessage().contains(hasError)) {
+				generateErrorMessage(e, ERROR_SAVE + errorMessage);
+			} else {
+				generateErrorMessage(e, ERROR_SAVE);
+			}
+			return null;
 		}
 		
-		return mv.get();
+		updateDataTableList();
+		return getPageList();
 	}
 	
-	@DeleteMapping("/{id}")
-	public ResponseEntity<T> delete(@PathVariable I id) {
-		
-		Optional<T> obj = service.findById(id);
-
-		if (!obj.isPresent()) {
-			log.info("DELETE NOT FOUND: " + id);
-			return ResponseEntity.notFound().build();
-		}
-
-		service.delete(obj.get());
-
-		return ResponseEntity.ok(obj.get());
-		
-		//return getListPage();
-	}
-
-	@ResponseBody
-	@GetMapping(value = "/export")	
-	public String export(HttpServletResponse response,
-			@RequestParam(name = "reportType", required = true, defaultValue = "PDF") String reportType,
-			@RequestParam(name = "forceDownload", required = true, defaultValue = "false") String forceDownload,
-			@RequestParam(name = "params", required = false) List<String> params) {
-		
-		Map<String, Object> params1 = this.getParametros();
-		params1.put("PARAMETER1", "");
-
-		IBaseReport report = new BaseReportImpl(reportName.isEmpty() ? "report" : reportName);
-		this.setReportType(reportType);	
-		this.export(report, service.findAll(), 
-					params1, Boolean.parseBoolean(forceDownload));
-		return "";
+	protected String save(I id, String descricao) {
+		return this.save(id, descricao, "Description", "", "", null);
 	}
 	
-	@ModelAttribute("listReportType")
-	public List<ReportGroupVO> getListReportType() {
-		return super.getListReportType();
+	protected String save(I id, String descricao, String nomeCampo) {
+		return this.save(id, descricao, nomeCampo, "", "", null);
+	}
+	
+	protected String save(I id) {
+		return this.save(id, null, null, "", "", null);
+	}
+	
+	protected String save(I id, Callable<String> fnc) {
+		return this.save(id, null, null, "", "", fnc);
+	}
+	
+	public String cancel() {
+		return getDesktopPage();
 	}
 
-	public String getListPage() {
-		return listPage;
+	public B getService() {
+		return service;
+	}
+	
+	public List<T> getListEntity() {
+		return listEntity;
 	}
 
-	public String getEditPage() {
-		return editPage;
+	public void setListEntity(List<T> listEntity) {
+		this.listEntity = listEntity;
 	}
 
-	public Boolean getForceDownload() {
-		return forceDownload;
+	public T getEntity() {
+		return entity;
 	}
 
-	public void setForceDownload(Boolean forceDownload) {
-		this.forceDownload = forceDownload;
+	public void setEntity(T entity) {
+		this.entity = entity;
 	}
 
+	public BaseViewState getState() {
+		return state;
+	}
+	
 }

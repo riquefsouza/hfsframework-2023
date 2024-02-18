@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -39,15 +38,9 @@ public class AdmParameterCategory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_PARAMETER_CATEGORY_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_PARAMETER_CATEGORY_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ADM_PARAMETER_CATEGORY_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_PARAMETER_CATEGORY_ID_GENERATOR", sequenceName = "ADM_PARAMETER_CATEGORY_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name="PMC_SEQ")
 	private Long id;
 
@@ -65,7 +58,7 @@ public class AdmParameterCategory implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(mappedBy="admParameterCategory", orphanRemoval = true, fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.JOIN)
 	private Set<AdmParameter> admParameters;
 
 	/**
@@ -87,14 +80,7 @@ public class AdmParameterCategory implements Serializable {
 		this.description = description;
 		this.order = order;
 	}
-/*	
-	public AdmParameterCategory(AdmParameterCategoryForm p) {
-		this();
-		this.id = p.getId();
-		this.description = p.getDescription();
-		this.order = p.getOrder();
-	}
-*/
+
 	/**
 	 * Limpar.
 	 */

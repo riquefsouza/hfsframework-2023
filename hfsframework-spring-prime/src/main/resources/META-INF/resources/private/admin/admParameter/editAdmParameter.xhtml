@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+<ui:define name="implementation">
+	<h:form id="editAdmParameter">
+		<div class="card crud-demo">
+			<p:panel id="panelBasic" header="Configuration Parameter Category"
+				style="margin-bottom:5px">
+
+	            <p:toolbar>
+	                <p:toolbarGroup align="right">                                       
+					
+						<p:commandButton id="btnSave" value="Save" ajax="false"
+							icon="pi pi-check" styleClass="ui-button-success mr-2"
+							action="#{admParameterMB.save}"
+							title="Save a parameter" />
+						
+						<p:commandButton value="Clean" id="btnClean"
+							icon="pi pi-star-o" styleClass="ui-button-primary mr-2"
+							type="reset" title="Clean Fields" />							
+					
+						<p:commandButton value="Cancel" immediate="true" ajax="false" 
+							icon="pi pi-times" styleClass="ui-button-secondary" 						 
+							action="#{admParameterMB.cancelEdition}" 
+							id="btnCancel" title="Cancel" />    
+	                </p:toolbarGroup>
+	            </p:toolbar>
+
+				<p:outputPanel class="card ui-fluid">
+					<div class="field">
+						<p:outputLabel for="category" value="Parameter Category:" />
+						<p:selectOneMenu label="Parameter Category" id="category"
+							required="true" styleClass="form-control" style="width: 100%"
+							converter="admParameterCategoryConverter"
+							value="#{admParameterMB.bean.admParameterCategory}"
+							filter="true" filterMatchMode="contains">
+							<f:selectItems
+								value="#{admParameterMB.listAdmParameterCategory}"
+								var="item" itemValue="#{item}" itemLabel="#{item.description}" />
+						</p:selectOneMenu>
+					</div>
+					<div class="field">					
+						<p:outputLabel for="code" value="Code:" />
+						<p:inputText id="code" styleClass="form-control"
+							value="#{admParameterMB.bean.code}" style="width: 100%"
+							label="Parameter Code" required="true">
+						</p:inputText>
+					</div>
+					<div class="field">					
+						<p:outputLabel for="value" value="Value:" />
+						<p:inputTextarea id="value" label="Value" rows="6" style="width: 100%"
+							 value="#{admParameterMB.bean.value}" maxlength="3000" 
+							counter="displayValue" counterTemplate="{0} characters remaining." 
+							autoResize="false" required="true" />
+				    	<h:outputText id="displayValue" />								
+					</div>
+					<div class="field">					
+						<p:outputLabel for="description" value="Description:" />
+						<p:inputText id="description" required="true" label="Description"
+							styleClass="form-control" style="width: 100%"
+							value="#{admParameterMB.bean.description}">
+							<f:validateLength maximum="255" />
+						</p:inputText>
+					</div>
+				</p:outputPanel>
+				
+			</p:panel>
+		</div>
+		</h:form>
+	</ui:define>
+</ui:composition>

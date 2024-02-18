@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import br.com.hfs.admin.vo.PageVO;
+import br.com.hfs.admin.vo.ProfileVO;
+import br.com.hfs.admin.vo.UserVO;
+import br.com.hfs.converter.BooleanToStringConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -16,21 +23,12 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import br.com.hfs.admin.vo.PageVO;
-import br.com.hfs.admin.vo.ProfileVO;
-import br.com.hfs.admin.vo.UserVO;
-import br.com.hfs.converter.BooleanToStringConverter;
 
 @Entity
 @Table(name = "ADM_PROFILE")
@@ -40,8 +38,8 @@ import br.com.hfs.converter.BooleanToStringConverter;
 	@NamedQuery(name = "AdmProfile.countAntigo", query = "SELECT COUNT(c) FROM AdmProfile c WHERE LOWER(c.description) <> ?1 AND LOWER(c.description) = ?2"),
 	@NamedQuery(name = "AdmProfile.findPagesByProfile", query = "SELECT distinct pag FROM AdmProfile p inner join p.admPages pag where p = ?1"),
 	@NamedQuery(name = "AdmProfile.findUsersByProfile", query = "SELECT distinct fp.userSeq FROM AdmProfile p, AdmUserProfile fp where p.id = fp.profileSeq AND p = ?1"),
-	@NamedQuery(name = "AdmProfile.findProfilesByUser", query = "SELECT distinct p FROM AdmProfile p, AdmUserProfile fp where p.id = fp.profileSeq AND fp.userSeq = ?1"),	
-	@NamedQuery(name = "AdmProfile.findProfilesByPage", query = "SELECT distinct p FROM AdmProfile p, AdmPageProfile fp where p.id = fp.profileSeq AND fp.pageSeq = ?1"),	
+	@NamedQuery(name = "AdmProfile.findProfilesByUser", query = "SELECT distinct p FROM AdmProfile p, AdmUserProfile fp where p.id = fp.profileSeq AND fp.userSeq = ?1"),
+	@NamedQuery(name = "AdmProfile.findProfilesByPage", query = "SELECT distinct p FROM AdmProfile p inner join p.admPages pag where pag.id = ?1"),
 	@NamedQuery(name = "AdmProfile.findAdminMenuParentByProfile", query="SELECT DISTINCT t FROM AdmMenu t WHERE t.id IN (SELECT m.admMenuParent.id FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id <= 9) ORDER BY t.order, t.id"),
 	@NamedQuery(name = "AdmProfile.findMenuParentByProfile", query="SELECT DISTINCT t FROM AdmMenu t WHERE t.id IN (SELECT m.admMenuParent.id FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id > 9) ORDER BY t.order, t.id"),
 	@NamedQuery(name = "AdmProfile.findAdminMenuByProfile", query="SELECT DISTINCT m FROM AdmProfile p INNER JOIN p.admPages f INNER JOIN f.admMenus m WHERE p = ?1 AND m.id <= 9 AND m.admMenuParent = ?2 ORDER BY m.order, m.id"),
@@ -60,15 +58,9 @@ public class AdmProfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_PROFILE_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_PROFILE_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_PROFILE_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_PROFILE_ID_GENERATOR", sequenceName = "ADM_PROFILE_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "PRF_SEQ")
 	private Long id;
 
@@ -93,7 +85,7 @@ public class AdmProfile implements Serializable {
 	/** The adm paginas. */
 	//@JsonIgnore
 	//@JsonSerialize(using = AdmPageListSerializer.class)
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.JOIN)
 	@ManyToMany(fetch = FetchType.EAGER) //, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "ADM_PAGE_PROFILE", joinColumns = { 
 			@JoinColumn(name = "PGL_PRF_SEQ") }, inverseJoinColumns = {	@JoinColumn(name = "PGL_PAG_SEQ") })
@@ -102,7 +94,7 @@ public class AdmProfile implements Serializable {
 	/** The adm funcionarios. */
 	//@JsonIgnore
 	//@JsonSerialize(using = AdmUserListSerializer.class)
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.JOIN)
 	@ManyToMany(fetch = FetchType.EAGER) //, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinTable(name = "ADM_USER_PROFILE", joinColumns = {
 			@JoinColumn(name = "USP_PRF_SEQ") }, inverseJoinColumns = { @JoinColumn(name = "USP_USE_SEQ") })
@@ -308,6 +300,18 @@ public class AdmProfile implements Serializable {
 	public String toString() {
 		return description;
 	}
+	
+	public String getPagesProfile() {
+		String ret = "";
+		for (AdmPage item : getAdmPages()) {
+			ret = ret.concat(item.getDescription()).concat(", ");
+		}
+		if (ret != "") {
+			ret = ret.substring(0, ret.length() - 2);
+		}
+		return ret;
+	}
+	
 	
 	public ProfileVO toProfileVO(){
 		ProfileVO p = new ProfileVO();

@@ -6,13 +6,27 @@
             <i class="pi pi-bars"></i>
         </a>
         
-        <h:link styleClass="layout-topbar-logo" outcome="/desktop.xhtml">
+        <h:link styleClass="layout-topbar-logo" outcome="/private/desktop.xhtml">
         	<strong>HFS</strong>
         <!-- 
 			<p:graphicImage style="margin-bottom: -10px;"
 				name="logo.png" library="images" width="40px" height="60px" />
  		-->					
         </h:link>
+        
+		<div class="topbar-form mr-4">
+			<h:form>
+	             <h:outputLink value="#{request.contextPath}/system/usuario.xhtml" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-user"></i>                 
+	             </h:outputLink>
+	             <h:outputLink value="#{request.contextPath}/system/config.xhtml" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-cog"></i>
+	             </h:outputLink>
+	            <p:commandLink action="#{hfsAuthenticator.logOut}" immediate="true" class="link layout-topbar-button mr-4">
+		            <i class="pi pi-sign-out"></i>
+	            </p:commandLink>            
+			</h:form>
+		</div>        
 
         <h:form styleClass="topbar-form mr-4" style="display: none">
         
@@ -51,19 +65,6 @@
             </ul>                        
         </h:form>
 
-		<div class="topbar-form mr-4">
-			<h:form>
-	             <h:outputLink value="#{request.contextPath}/private/system/usuario.faces" class="link layout-topbar-button mr-4">
-		            <i class="pi pi-user"></i>                 
-	             </h:outputLink>
-	             <h:outputLink value="#{request.contextPath}/private/system/config.faces" class="link layout-topbar-button mr-4">
-		            <i class="pi pi-cog"></i>
-	             </h:outputLink>
-	            <p:link href="/logout" class="link layout-topbar-button mr-4">
-		            <i class="pi pi-sign-out"></i>
-	            </p:link>            
-			</h:form>
-		</div>
 		
     </div>
 </ui:composition>

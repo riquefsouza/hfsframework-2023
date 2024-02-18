@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.hfs.admin.model.AdmPage;
+import br.com.hfs.admin.model.AdmProfile;
 import br.com.hfs.admin.repository.AdmPageRepository;
 import br.com.hfs.base.BaseService;
 
@@ -35,4 +36,7 @@ public class AdmPageService extends BaseService<AdmPage, Long, AdmPageRepository
 		return listByRange("ADM_PAGE", "PAG_SEQ", startInterval, endInterval);
 	}
 	
+	public List<AdmProfile> findProfilesByPage(AdmPage page){
+		return repository.findProfilesByPage(page);
+	}
 }

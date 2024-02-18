@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/template/template.xhtml">
+
+    <ui:define name="implementation">
+        <h:form id="form">
+            <div class="card crud-demo">
+                <p:growl id="messages" showDetail="true"/>
+
+				<p:panel id="panelBasic" header="Parâmetro de configuração"
+					styleClass="p-mb-2">
+					<div class="ui-fluid formgrid grid">
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="cmbTypeReport" value="Escolha o tipo de relatório:" />
+							<br></br>	
+							<p:selectOneMenu id="cmbTypeReport" value="#{admParameterRelMB.typeReport}">
+								<f:selectItems value="#{admParameterRelMB.listTypeReport}" />
+							</p:selectOneMenu>    
+						</div>
+					    <div class="field col-4 md-4">
+							<p:outputLabel for="forceDownload" value="Forçar download:" />
+							<p:spacer width="10" height="10" />	
+							<p:selectBooleanCheckbox id="forceDownload" value="#{admParameterRelMB.forceDownload}" />    
+						</div>
+					</div>					
+				</p:panel>
+
+                <p:toolbar>
+                    <p:toolbarGroup>                                        
+                        <p:commandButton value="Adicionar" icon="pi pi-plus" actionListener="#{admParameterView.adicionar}"
+                                         update=":form:conteudoEditDialog" oncomplete="PF('editDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":form:conteudoEditDialog"/>
+                        </p:commandButton>
+                        <p:commandButton id="btnDelete" value="#{admParameterView.deleteButtonMessage}"
+                                         icon="pi pi-trash" actionListener="#{admParameterView.deleteSelecionadosBean}"
+                                         styleClass="ui-button-danger" disabled="#{!admParameterView.hasSelecionadosBean()}"
+                                         update="@this">
+                                <p:confirm header="Confirmation" message="Excluir a categoria de parâmetro selecionada?" icon="pi pi-exclamation-triangle" />
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">						
+                        <p:commandButton value="Exportar" icon="pi pi-upload" onclick="form.target='_blank'" 
+                        	action="#{admParameterRelMB.export}" id="btnExportar" ajax="false" 
+                        	styleClass="ui-button-help p-mr-2 p-mb-2" style="margin-right: .5rem">
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+                                
+                <p:dataTable id="tabela" widgetVar="widgetTabela" var="item" value="#{admParameterView.listaBean}"
+                             reflow="true" styleClass="crud-table" responsiveLayout="scroll"
+                             selection="#{admParameterView.selecionadosBean}" rowKey="#{item.id}" paginator="true"
+                             rows="10" rowSelectMode="add" paginatorPosition="both"
+                             rowsPerPageTemplate="10,30,50,100,150,200" 
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="Mostrando {startRecord} até {endRecord} de {totalRecords} entradas"                             
+                             rowHover="true">
+                    <f:facet name="header">
+                        <div class="crud-table-header">
+                            <span style="font-weight: bold">Parâmetros </span>
+
+                            <span class="filter-container ui-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <p:inputText id="globalFilter" onkeyup="PF('widgetTabela').filter()" placeholder="Pesquisar"/>
+                            </span>
+
+                        </div>
+                    </f:facet>
+                    
+                    <f:facet name="footer">
+	                    <div class="p-d-flex p-ai-center p-jc-between">
+	                        No total existem #{admParameterView.listaBean.size()} parâmetros.
+	                    </div>                    
+                    </f:facet>
+
+                    <p:ajax event="rowSelect" update=":form:btnDelete"/>
+                    <p:ajax event="rowUnselect" update=":form:btnDelete"/>
+                    <p:ajax event="rowSelectCheckbox" update=":form:btnDelete"/>
+                    <p:ajax event="rowUnselectCheckbox" update=":form:btnDelete"/>
+                    <p:ajax event="toggleSelect" update=":form:btnDelete"/>
+
+                    <p:column selectionMode="multiple" exportable="false"></p:column>
+
+                    <p:column headerText="Id" sortBy="#{item.id}" filterBy="#{item.id}" style="width:5%; min-width:5rem;">
+                        <h:outputText value="#{item.id}"/>
+                    </p:column>                    
+					<p:column headerText="Categoria do parâmetro" sortBy="#{item.admParameterCategory.description}"
+						filterBy="#{item.admParameterCategory.description}" filterMatchMode="contains">
+						<h:outputText value="#{item.admParameterCategory.description}" />
+					</p:column>
+					<p:column headerText="Parâmetro" sortBy="#{item.code}" filterBy="#{item.code}" filterMatchMode="contains">
+						<h:outputText value="#{item.code}" />
+					</p:column>
+					<p:column headerText="Valor" sortBy="#{item.value}" filterBy="#{item.value}" filterMatchMode="contains"
+						style="width:25%;">
+						<h:outputText value="#{item.value}" />
+					</p:column>
+					<p:column headerText="Descrição" sortBy="#{item.description}" filterBy="#{item.description}" filterMatchMode="contains"
+						style="width:25%;">
+						<h:outputText value="#{item.description}" />
+					</p:column>                    
+                                        
+                    <p:column exportable="false" style="width: 25px;">
+			        	<p:menuButton icon="pi pi-ellipsis-v" buttonStyleClass="ui-button-flat ui-button-plain" buttonStyle="border-style: none;">
+				            <p:menuitem value="Editar" icon="pi pi-pencil" update=":form:conteudoEditDialog"
+                                         oncomplete="PF('editDialog').show()" process="@this">
+	                            <f:setPropertyActionListener value="#{item}" target="#{admParameterView.bean}"/>
+	                            <p:resetInput target=":form:conteudoEditDialog"/>
+				            </p:menuitem>
+				            <p:menuitem value="Excluir" icon="pi pi-trash" process="@this"
+                                         oncomplete="PF('excluirDialog').show()">
+                            	<f:setPropertyActionListener value="#{item}" target="#{admParameterView.bean}"/>
+				            </p:menuitem>
+		    		    </p:menuButton>                    	
+                    </p:column>
+                        
+                </p:dataTable>
+        
+                <p:dialog header="Detalhes do Parâmetro" showEffect="fade" modal="true"
+                          widgetVar="editDialog" responsive="true" position="center" >
+                    <p:outputPanel id="conteudoEditDialog" class="ui-fluid" style="width: 650px">
+                        <p:outputPanel rendered="#{not empty admParameterView.bean}">
+                        	<div class="field">
+								<p:outputLabel for="category" value="Categoria do Parâmetro:" />
+								<p:selectOneMenu label="Categoria do Parâmetro" id="category"
+									required="true" style="width: 100%"
+									converter="admParameterCategoryConverter"
+									value="#{admParameterView.bean.admParameterCategory}"
+									filter="true" filterMatchMode="contains">
+									<f:selectItems
+										value="#{admParameterView.listAdmParameterCategory}"
+										var="item" itemValue="#{item}" itemLabel="#{item.description}" />
+								</p:selectOneMenu>
+                        	</div>
+                        	<div class="field">
+								<p:outputLabel for="code" value="Parâmetro:" />
+								<p:inputText id="code" value="#{admParameterView.bean.code}" 
+									style="width: 100%" label="Parâmetro" required="true">
+								</p:inputText>
+                        	</div>
+                            <div class="field">
+								<p:outputLabel for="value" value="Valor:" />
+								<p:inputTextarea id="value" label="Valor" rows="6" style="width: 100%"
+									 value="#{admParameterView.bean.value}" maxlength="3000" 
+									counter="displayValue" counterTemplate="{0} caracteres restantes." 
+									autoResize="false" required="true" />
+						    	<h:outputText id="displayValue" />
+                            </div>                        	                        
+                            <div class="field">
+								<p:outputLabel for="description" value="Descrição:" />
+								<p:inputTextarea id="description" label="Descrição" rows="6" tyle="width: 100%" 
+									value="#{admParameterView.bean.description}" maxlength="255"
+									counter="displayDescription" counterTemplate="{0} caracteres restantes." 
+									autoResize="false" required="true" />
+								<h:outputText id="displayDescription" />
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Salvar" icon="pi pi-check" actionListener="#{admParameterView.salvar}"
+                                         update="conteudoEditDialog" process="conteudoEditDialog @this"/>
+                        <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('editDialog').hide()"
+                                         class="ui-button-secondary" immediate="true" />
+                    </f:facet>
+                </p:dialog>
+
+                <p:confirmDialog widgetVar="excluirDialog" showEffect="fade" width="300"
+                                 message="Deseja excluir?" header="Confirma" severity="warn">
+                    <p:commandButton value="Sim" icon="pi pi-check" actionListener="#{admParameterView.excluir}"
+                                     process="@this" oncomplete="PF('excluirDialog').hide()"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('excluirDialog').hide()"/>
+                </p:confirmDialog>
+
+                <p:confirmDialog global="true" showEffect="fade" width="300">
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                    <p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

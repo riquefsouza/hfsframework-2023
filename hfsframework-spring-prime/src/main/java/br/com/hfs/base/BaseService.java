@@ -28,9 +28,7 @@ public abstract class BaseService<T, I extends Serializable, C extends JpaReposi
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The log. */
-	//@Inject
-	protected Logger log = LogManager.getLogger(BaseService.class);;
+	protected Logger log = LogManager.getLogger(BaseService.class);
 
 	@Autowired
 	protected C repository;

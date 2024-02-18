@@ -79,12 +79,12 @@ public class AdmMenuService extends BaseService<AdmMenu, Long, AdmMenuRepository
 	}
 		
 	@Transactional
-	public void delete(AdmMenu menu) {
+	public void deleteMenu(AdmMenu menu) {
 		cacheMenuEstaticos.clear();
 		List<AdmMenu> listaMenuFilhos = repository.findChildrenMenus(menu);
 		if ((listaMenuFilhos != null) && (!listaMenuFilhos.isEmpty())) {
 			for (AdmMenu menuFilho : listaMenuFilhos) {
-				delete(menuFilho);
+				deleteMenu(menuFilho);
 			}
 		}
 		menu = (AdmMenu) findById(menu.getId().longValue()).get();

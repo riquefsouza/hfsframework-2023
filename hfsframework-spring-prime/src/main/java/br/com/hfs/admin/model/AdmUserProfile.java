@@ -12,11 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "ADM_USER_PROFILE", 
@@ -32,15 +30,9 @@ public class AdmUserProfile implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_USER_PROFILE_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_USER_PROFILE_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_USER_PROFILE_ID_GENERATOR")	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_USER_PROFILE_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_USER_PROFILE_ID_GENERATOR", sequenceName = "ADM_USER_PROFILE_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name = "USP_SEQ")
 	private Long id;
 	

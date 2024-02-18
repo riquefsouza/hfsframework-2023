@@ -2,9 +2,6 @@ package br.com.hfs.admin.model;
 
 import java.io.Serializable;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -35,15 +33,9 @@ public class AdmParameter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_PARAMETER_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_PARAMETER_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
+	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ADM_PARAMETER_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_PARAMETER_ID_GENERATOR", sequenceName = "ADM_PARAMETER_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name="PAR_SEQ")
 	private Long id;
 
@@ -90,16 +82,7 @@ public class AdmParameter implements Serializable {
 		this.value = value;
 		this.idAdmParameterCategory = idAdmParameterCategory;
 	}
-/*
-	public AdmParameter(AdmParameterForm p) {
-		this();
-		this.id = p.getId();
-		this.code = p.getCode();
-		this.description = p.getDescription();
-		this.value = p.getValue();
-		this.idAdmParameterCategory = p.getAdmParameterCategory().getId();
-	}
-*/
+
 	/**
 	 * Limpar.
 	 */
@@ -187,10 +170,21 @@ public class AdmParameter implements Serializable {
 		this.value = value;
 	}
 
+	/**
+	 * Pega o the parameter category.
+	 *
+	 * @return o the parameter category
+	 */
 	public AdmParameterCategory getAdmParameterCategory() {
 		return this.admParameterCategory;
 	}
-	
+
+	/**
+	 * Atribui o the parameter category.
+	 *
+	 * @param admParameterCategory
+	 *            o novo the parameter category
+	 */
 	public void setAdmParameterCategory(AdmParameterCategory admParameterCategory) {
 		this.admParameterCategory = admParameterCategory;
 	}
@@ -199,6 +193,12 @@ public class AdmParameter implements Serializable {
 		return idAdmParameterCategory;
 	}
 
+	/**
+	 * Atribui o the id parameter category.
+	 *
+	 * @param idAdmParameterCategory
+	 *            o novo the id parameter category
+	 */
 	public void setIdAdmParameterCategory(Long idAdmParameterCategory) {
 		this.idAdmParameterCategory = idAdmParameterCategory;
 	}

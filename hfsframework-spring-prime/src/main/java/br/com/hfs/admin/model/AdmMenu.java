@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,10 +23,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -57,21 +53,12 @@ public class AdmMenu implements Serializable, Comparable<AdmMenu> {
 
 	/** The id. */
 	@Id	
-	@GenericGenerator(name = "ADM_MENU_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_MENU_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_MENU_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_MENU_ID_GENERATOR", sequenceName = "ADM_MENU_SEQ", initialValue = 1, allocationSize = 1)	
 	@Column(name = "MNU_SEQ")
 	private Long id;
 
 	/** The description. */
-	@NotNull
-	@NotBlank
-	@Size(min=4, max=255)
 	@Column(name = "MNU_DESCRIPTION", unique = true, nullable = false, length = 255)
 	private String description;
 
@@ -103,7 +90,7 @@ public class AdmMenu implements Serializable, Comparable<AdmMenu> {
 	//@OrderBy("order")
 	@JsonIgnore
 	//@JsonSerialize(using = AdmMenuListSerializer.class)
-	@Fetch(FetchMode.SUBSELECT)
+	@Fetch(FetchMode.JOIN)
 	@OneToMany(mappedBy = "admMenuParent", orphanRemoval = true, fetch = FetchType.EAGER)	
 	private List<AdmMenu> admSubMenus;
 
@@ -131,16 +118,7 @@ public class AdmMenu implements Serializable, Comparable<AdmMenu> {
 		this.idPage = m.getIdPage();
 		this.idMenuParent = m.getMenuParent().getId();
 	}
-/*	
-	public AdmMenu(AdmMenuForm m) {
-		this();
-		this.id = m.getId();
-		this.description = m.getDescription();
-		this.order = m.getOrder();
-		this.idPage = m.getIdPage();
-		this.idMenuParent = m.getIdMenuParent();
-	}
-*/
+	
 	/**
 	 * Limpar.
 	 */

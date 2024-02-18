@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import br.com.hfs.admin.model.AdmMenu;
+import br.com.hfs.admin.model.AdmPage;
 import br.com.hfs.admin.model.AdmProfile;
 
 public interface AdmProfileRepository extends JpaRepository<AdmProfile, Long> {
@@ -51,5 +52,8 @@ public interface AdmProfileRepository extends JpaRepository<AdmProfile, Long> {
 
 	@Query(name = "AdmProfile.findAdminMenuByIdPerfis")
 	public List<AdmMenu> findAdminMenuByIdPerfis(List<Long> listaIdProfile, AdmMenu admMenu);
+
+	@Query(name = "AdmProfile.findPagesByProfile")
+	public List<AdmPage> findPagesByProfile(AdmProfile profile);
 
 }

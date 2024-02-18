@@ -6,8 +6,6 @@ import java.util.Set;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,6 +22,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -36,7 +35,7 @@ import jakarta.validation.constraints.Size;
 	@NamedQuery(name = "AdmPage.getDescriptionById", query = "SELECT c.url FROM AdmPage c WHERE c.id = ?1"),
 	@NamedQuery(name = "AdmPage.countNovo", query = "SELECT COUNT(c) FROM AdmPage c WHERE LOWER(c.url) = ?1"),
 	@NamedQuery(name = "AdmPage.countAntigo", query = "SELECT COUNT(c) FROM AdmPage c WHERE LOWER(c.url) <> ?1 AND LOWER(c.url) = ?2"),	
-	@NamedQuery(name = "AdmPage.findPerfisPorPage", query="SELECT distinct p FROM AdmPage pag inner join pag.admProfiles p where pag = ?1")
+	@NamedQuery(name = "AdmPage.findProfilesByPage", query="SELECT distinct p FROM AdmPage pag inner join pag.admProfiles p where pag = ?1")
 })
 public class AdmPage implements Serializable {
 	
@@ -44,15 +43,9 @@ public class AdmPage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/** The id. */
-	@Id	
-	@GenericGenerator(name = "ADM_PAGE_ID_GENERATOR",
-	type = org.hibernate.id.enhanced.SequenceStyleGenerator.class,
-    parameters = {
-    	@Parameter(name = "sequence_name", value = "ADM_PAGE_SEQ"),
-        @Parameter(name = "initial_value", value = "1"),
-        @Parameter(name = "increment_size", value = "1")
-	})		
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_PAGE_ID_GENERATOR")	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ADM_PAGE_ID_GENERATOR")
+	@SequenceGenerator(name = "ADM_PAGE_ID_GENERATOR", sequenceName = "ADM_PAGE_SEQ", initialValue = 1, allocationSize = 1)
 	@Column(name="PAG_SEQ")
 	private Long id;
 
@@ -84,8 +77,8 @@ public class AdmPage implements Serializable {
 	
 	/** The adm menus. */
 	@JsonIgnore
-	@Fetch(FetchMode.SUBSELECT)
-	@OneToMany(mappedBy = "admPage", orphanRemoval = true, fetch = FetchType.LAZY)	
+	@Fetch(FetchMode.JOIN)
+	@OneToMany(targetEntity = AdmMenu.class, mappedBy = "admPage", fetch = FetchType.LAZY)	
 	private Set<AdmMenu> admMenus;	
 
 	/**
@@ -112,15 +105,7 @@ public class AdmPage implements Serializable {
 		this.description = p.getDescription();
 		this.url = p.getUrl();
 	}
-/*
-	public AdmPage(AdmPageForm p) {
-		this();
-		
-		this.id = p.getId();
-		this.description = p.getDescription();
-		this.url = p.getUrl();
-	}
-*/	
+	
 	/**
 	 * Limpar.
 	 */
@@ -255,12 +240,7 @@ public class AdmPage implements Serializable {
 		return this.url;
 	}
 
-	/**
-	 * Gets the perfis pagina.
-	 *
-	 * @return the perfis pagina
-	 */
-	public String getPerfisPage() {
+	public String getProfilesPage() {
 		String ret = "";
 		for (AdmProfile item : getAdmProfiles()) {
 			ret = ret.concat(item.getDescription()).concat(", ");

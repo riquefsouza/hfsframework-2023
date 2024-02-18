@@ -1,157 +1,115 @@
 package br.com.hfs.base;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.primefaces.PrimeFaces;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
 
 import br.com.hfs.admin.vo.AuthenticatedUserVO;
 import br.com.hfs.admin.vo.MenuVO;
-import br.com.hfs.util.AuthenticationUtil;
+import br.com.hfs.util.ExporterUtil;
+import br.com.hfs.util.exceptions.ExceptionUtil;
+//import br.com.hfs.util.filter.NavegationFilter;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 public abstract class BaseViewController {
 
-	protected transient Logger log;	
+	protected Logger log = LogManager.getLogger(BaseViewController.class);
+
+	/** The context. */
+	@Autowired
+	protected FacesContext context;
 	
-	protected static final String SELECIONAR_REGISTRO = "Please select a table record to do this action!";
-	
-	protected static final String ERRO_SALVAR = "Transaction Error When Saving: ";
-	
-	protected static final String ERRO_DELETE = "Error Transaction When Excluding: ";
+	/** The pdf utils. */
+	@Autowired
+	protected ExporterUtil pdfUtils;
 	
 	@Autowired
 	protected MessageSource messageSource;
+
+	protected static final String SELECT_RECORD = "Please select a record from the table to proceed with this action.";
 	
+	protected static final String ERROR_SAVE = "Transaction error to save: ";
+	
+	protected static final String ERROR_DELETE = "Transaction error to delete: ";
+		
 	public String getDesktopPage(){
-		return "/index.html";
+		//return "/private/"+NavegationFilter.DESKTOP_SCREEN;
+		return "/private/desktop.xhtml";
 	}
 
-	public void showPrimaryMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("primaryMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
+	public void generateErrorMessage(String message) {
+		context.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, message));
 	}
 
-	public void showSecondaryMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("secondaryMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
+	public void generateErrorMessage(Exception e, String message) {
+		context.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ExceptionUtil.getErrors(log, e, message)));
 	}
 
-	public void showSuccessMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("successMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
+	public void generateInformativeMessage(String message) {
+		context.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
 	}
 
-	public void showWarningMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("warningMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
+	public void generateWarningMessage(String message) {
+		context.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
+	}
+
+	public void generateErrorMessage(Exception e, String message, String clientId) {
+		context.addMessage(clientId,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, ExceptionUtil.getErrors(log, e, message)));
+	}
+
+	public void generateInformativeMessage(String message, String clientId) {
+		context.addMessage(clientId,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, message));
+	}
+
+	public void generateWarningMessage(String message, String clientId) {
+		context.addMessage(clientId,
+				new FacesMessage(FacesMessage.SEVERITY_WARN, null, message));
+	}
+
+	public static void addMessageInfoDialog(String message) {
+		PrimeFaces.current().dialog()
+			.showMessageDynamic(new FacesMessage(FacesMessage.SEVERITY_INFO, "Information", message));
+	}
+
+	public static void addMessageWarningDialog(String message) {
+		PrimeFaces.current().dialog()
+			.showMessageDynamic(new FacesMessage(FacesMessage.SEVERITY_WARN, "Attention", message));
+	}
+
+	public static void addMessageErrorDialog(Exception e, String message) {
+		PrimeFaces.current().dialog()
+			.showMessageDynamic(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erro", 
+					ExceptionUtil.getErrors(LogManager.getLogger(), e, message)));
 	}
 	
-	public void showInfoMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("infoMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showLightMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("lightMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showDarkMessage(RedirectAttributes attributes, String messageCode) {
-		attributes.addFlashAttribute("darkMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showDangerMessage(RedirectAttributes attributes, Exception e) {
-		attributes.addFlashAttribute("dangerMessage", e.getMessage());
-	}
-
-
-	public void showPrimaryMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("primaryMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showSecondaryMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("secondaryMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showSuccessMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("successMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showWarningMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("warningMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-	
-	public void showInfoMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("infoMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showLightMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("lightMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showDarkMessage(ModelAndView mv, String messageCode) {
-		mv.addObject("darkMessage", messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale()));
-	}
-
-	public void showDangerMessage(ModelAndView mv, Exception e) {
-		mv.addObject("dangerMessage", e.getMessage());
-	}
-
-	protected void logBindingResultErrors(BindingResult result, Logger log) {
-		result.getAllErrors().forEach(item -> {
-			log.error("ObjectName: " + item.getObjectName());
-			Arrays.asList(item.getArguments()).forEach(arg -> log.error("Argument: " +	arg));
-			log.error("Code: " + item.getCode());
-			Arrays.asList(item.getCodes()).forEach(code -> log.error("Code: " + code));
-			log.error("DefaultMessage: " + item.getDefaultMessage());
-			log.info("Item: " + item.toString());
-		});
-	}	
-	
-	public void generateErrorMessage(String mensagem) {
-	}
-
-	public void generateErrorMessage(Exception e, String mensagem) {
-	}
-
-	public void generateInfoMessage(String mensagem) {
-	}
-
-	public void gerarMensagemAviso(String mensagem) {
-	}
-
-	public void generateErrorMessage(Exception e, String mensagem, String clientId) {
-	}
-
-	public void generateInfoMessage(String mensagem, String clientId) {
-	}
-
-	public void generateWarnMessage(String mensagem, String clientId) {
-	}
-	
-	public static void addMessageInfoDialog(String mensagem) {
-	}
-
-	public static void addMessageWarnDialog(String mensagem) {
-	}
-
-	public static void addMessageErrorDialog(Exception e, String mensagem) {
-	}
-		
 	public HttpSession getSession() {
-	    ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-	    return attr.getRequest().getSession();
-		
+		HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		return hsr.getSession();		
 	}
 	
-	public Map<String, String> getSessionAttributes() {
+	public Map<String, String> getAttributesSession() {
 		HttpSession sessao = getSession();
 		HashMap<String, String> mapa = new HashMap<String, String>();
 		String atributo, valor;
@@ -163,33 +121,43 @@ public abstract class BaseViewController {
 		return mapa;
 	}
 	
-	public void logSessionAttributes() {
-		log.info("Sessão: [");
-		for (Entry<String, String> item : getSessionAttributes().entrySet()) {
+	public void logAttributesSession() {
+		log.info("Session: [");
+		for (Entry<String, String> item : getAttributesSession().entrySet()) {
 			log.info("\n" + item.getKey() + " = " + item.getValue());
 		}
 		log.info("]");
 	}
 	
+	public void preProcessPDF(Object document, String reportTitle) 
+			throws IOException, BadElementException, DocumentException {
+		pdfUtils.preProcessaPDF(document, reportTitle);
+	}
+
 	public AuthenticatedUserVO getAuthenticatedUser() {		
 		return (AuthenticatedUserVO) getSession().getAttribute("authenticatedUser");
 	}
-	
-	public void setUserAuthenticated(AuthenticatedUserVO usu){
-		getSession().setAttribute("authenticatedUser", usu);
-	}
-	
+
+	/**
+	 * Gets the id menu.
+	 *
+	 * @return the id menu
+	 */
 	private String getIdMenu() {
-		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();		
-		Map<String, String[]> params = attr.getRequest().getParameterMap();
-		String[] sIdMenu = params.get("id");
-		if (sIdMenu != null && sIdMenu.length > 0 && !sIdMenu[0].isEmpty()) {
-			return sIdMenu[0];
+		Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+		String sIdMenu = params.get("id");
+		if (sIdMenu != null && !sIdMenu.isEmpty()) {
+			return sIdMenu;
 		}
 		return "";
 	}
 	
-	public MenuVO getCurrentMenu(){
+	/**
+	 * Gets the menu atual.
+	 *
+	 * @return the menu atual
+	 */
+	public MenuVO getMenuAtual(){
 		String idMenu = getIdMenu();
 		if (!idMenu.isEmpty())
 			return getAuthenticatedUser().getMenu(idMenu);
@@ -197,22 +165,25 @@ public abstract class BaseViewController {
 			return null;
 	}
 	
-	public Optional<ModelAndView> getPage(String pagina) {		
-		if (AuthenticationUtil.getPrincipal().isPresent()) {
-			ModelAndView mv = new ModelAndView(pagina);
-			
-			//mv.getModelMap().get(key)
-			
-			//if (!mv.getModel().containsKey("urlServer")) {			
-				//mv.addObject("urlServer", authServerURL);
-		    //}
-			//if (!mv.getModel().containsKey("userLogged")) {		
-				//mv.addObject("userLogged", getPrincipal().get());
-			//}
-			
-			return Optional.of(mv);
-		}		
-		return Optional.empty();
+	/**
+	 * Data mes ano view change.
+	 *
+	 * @param campo the campo
+	 * @param formularioCampo the formulario campo
+	 * @return the date
+	 */
+	public Date dataMesAnoViewChange(Date campo, String formularioCampo){
+		Map<String, String> requestParams = context.getExternalContext().getRequestParameterMap();
+		Calendar c = Calendar.getInstance();
+		if (campo == null)
+			campo = c.getTime();
+		else
+			c.setTime(campo);
+		int ano = Integer.parseInt(requestParams.get(formularioCampo+"_year"));
+		int mes = Integer.parseInt(requestParams.get(formularioCampo+"_month"))-1;		
+		c.set(ano, mes, 1, 0, 0, 0);
+		c.set(Calendar.DAY_OF_MONTH, c.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return c.getTime();
 	}	
 
 }
